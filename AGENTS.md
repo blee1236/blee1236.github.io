@@ -20,6 +20,11 @@ These must never appear in any committed file, page, metadata, or commit message
 (`Lee_Bennett_Resume_2026.pdf`), phone number included, as a download on the site. Only that file is
 approved. Ask again before publishing any other or updated CV file.
 
+**Approved research PDFs (2026-11-05):** the six stock pitches in `research/` (FIX, CMPR, PETR4, HONA,
+3407 Asahi Kasei, IOT). Bennett confirmed HONA is his own work (not employer research) and approved
+publishing the Petrobras PDF despite its "For Internal Use Only" label. Ask before adding any new pitch,
+and check each new one for employer, confidentiality, or third-party labels.
+
 ## 2. Ask Bennett first before
 
 - **Any `git push`, deploy, or publishing action** — nothing goes to GitHub without explicit approval.

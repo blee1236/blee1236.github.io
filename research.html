@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Research — Bennett Lee</title>
+  <meta name="description" content="Stock pitches and equity research write-ups by Bennett Lee.">
+  <style>
+    :root {
+      --columbia: #B9D9EB;
+      --columbia-soft: #E6F1F8;
+      --navy: #1D4F91;
+      --deep: #0C2340;
+      --bg: #F7FAFC;
+      --card: #FFFFFF;
+      --text: #1A2B3C;
+      --muted: #55697D;
+      --radius: 14px;
+      --shadow: 0 2px 10px rgba(12, 35, 64, 0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: var(--navy); }
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+    /* ---------- Nav ---------- */
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      background: var(--deep);
+      border-bottom: 3px solid var(--columbia);
+    }
+    .nav-inner {
+      max-width: 1040px; margin: 0 auto; padding: 0.85rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    .brand { color: #fff; font-weight: 700; text-decoration: none; letter-spacing: 0.02em; }
+    .brand span { color: var(--columbia); }
+    .nav-links { display: flex; gap: 1.4rem; list-style: none; flex-wrap: wrap; }
+    .nav-links a {
+      color: #DCE9F3; text-decoration: none; font-size: 0.95rem; font-weight: 500;
+      padding-bottom: 2px; border-bottom: 2px solid transparent;
+    }
+    .nav-links a:hover { color: #fff; border-bottom-color: var(--columbia); }
+    .nav-links a.nav-cta {
+      background: var(--columbia); color: var(--deep); font-weight: 700;
+      padding: 0.25rem 0.8rem; border-radius: 999px; border-bottom: none;
+    }
+    .nav-links a.nav-cta:hover { background: #fff; color: var(--deep); }
+
+    /* ---------- Hero ---------- */
+    header.hero {
+      background: linear-gradient(135deg, var(--columbia) 0%, var(--columbia-soft) 100%);
+      padding: 4.5rem 1.5rem 3.5rem;
+    }
+    .hero-inner { max-width: 1040px; margin: 0 auto; }
+    .hero .hi { color: var(--navy); font-weight: 600; font-size: 1.05rem; }
+    .hero h1 { color: var(--deep); font-size: clamp(2.4rem, 6vw, 3.6rem); line-height: 1.1; margin: 0.3rem 0 0.9rem; }
+    .hero p.lede { font-size: 1.15rem; max-width: 640px; color: #23384D; }
+    .links { margin-top: 1.6rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-block; padding: 0.6rem 1.15rem; border-radius: 999px;
+      font-weight: 600; font-size: 0.95rem; text-decoration: none;
+      background: var(--navy); color: #fff; border: 2px solid var(--navy);
+      transition: transform .15s ease, background .15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); background: var(--deep); border-color: var(--deep); }
+    .btn.ghost { background: transparent; color: var(--navy); }
+    .btn.ghost:hover { background: var(--navy); color: #fff; }
+
+    /* ---------- Section tiles ---------- */
+    .tiles {
+      max-width: 1040px; margin: -1.75rem auto 0; padding: 0 1.5rem;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+      position: relative;
+    }
+    .tile {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 1.2rem 1.3rem; text-decoration: none; color: var(--text);
+      border-top: 4px solid var(--navy);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .tile:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(12,35,64,0.12); }
+    .tile .num { font-size: 0.8rem; font-weight: 700; color: var(--navy); letter-spacing: 0.08em; }
+    .tile h2 { font-size: 1.15rem; color: var(--deep); margin: 0.15rem 0 0.25rem; }
+    .tile p { font-size: 0.9rem; color: var(--muted); }
+
+    /* ---------- Sections ---------- */
+    main { max-width: 1040px; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
+    section { padding-top: 3rem; }
+    .section-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 1.25rem; }
+    .section-head h2 { font-size: 1.7rem; color: var(--deep); }
+    .section-head .bar { flex: 1; height: 2px; background: var(--columbia); }
+    .section-head a.top { font-size: 0.85rem; text-decoration: none; color: var(--muted); }
+    .section-head a.top:hover { color: var(--navy); }
+
+    .card {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 1.5rem 1.6rem; margin-bottom: 1.1rem;
+      border-left: 5px solid var(--columbia);
+    }
+    .card-top { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .card h3 { font-size: 1.15rem; color: var(--deep); letter-spacing: 0.01em; }
+    .meta { text-align: right; color: var(--muted); font-size: 0.9rem; }
+    .role { font-weight: 600; color: var(--navy); margin-top: 0.15rem; }
+    .role .dates { font-weight: 400; color: var(--muted); }
+    .blurb { font-style: italic; color: var(--muted); font-size: 0.95rem; margin-top: 0.2rem; }
+    .card ul { margin: 0.7rem 0 0 1.15rem; }
+    .card li { margin-bottom: 0.4rem; }
+    .card li::marker { color: var(--navy); }
+    .sub { margin-top: 1.1rem; }
+    .kv { margin-top: 0.7rem; }
+    .kv dt { font-weight: 700; color: var(--navy); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.8rem; }
+    .kv dd { margin-top: 0.15rem; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.4rem; }
+    .chip {
+      background: var(--columbia-soft); color: var(--deep); border: 1px solid var(--columbia);
+      border-radius: 999px; padding: 0.25rem 0.75rem; font-size: 0.88rem;
+    }
+    .win { background: var(--navy); color: #fff; border-color: var(--navy); font-weight: 600; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+
+    footer {
+      background: var(--deep); color: #C9DAE8; text-align: center;
+      padding: 2rem 1.5rem; font-size: 0.9rem;
+    }
+    footer a { color: var(--columbia); }
+
+    @media (max-width: 760px) {
+      .tiles, .grid-2 { grid-template-columns: 1fr; }
+      .meta { text-align: left; }
+      .nav-links { gap: 1rem; }
+      header.hero { padding-top: 3rem; }
+    }
+  </style>
+  <style>
+    .nav-links a.active { color: #fff; border-bottom-color: var(--columbia); }
+    header.hero.small { padding: 3.25rem 1.5rem 2.75rem; }
+    .hero.small h1 { font-size: clamp(2rem, 5vw, 2.8rem); }
+
+    .filters { display: flex; gap: 0.5rem; flex-wrap: wrap; margin: 2rem 0 0.5rem; }
+    .filters button {
+      font: inherit; font-size: 0.9rem; font-weight: 600; cursor: pointer;
+      padding: 0.4rem 1rem; border-radius: 999px;
+      background: var(--card); color: var(--navy); border: 2px solid var(--columbia);
+    }
+    .filters button[aria-pressed="true"] { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+    .pitch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.1rem; margin-top: 1rem; }
+    .pitch {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 1.4rem 1.5rem; display: flex; flex-direction: column;
+      border-top: 4px solid var(--navy);
+    }
+    .pitch.short { border-top-color: #9B2C2C; }
+    .pitch.neutral { border-top-color: #7A8CA0; }
+    .pitch-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 0.75rem; }
+    .ticker { font-size: 0.8rem; font-weight: 700; letter-spacing: 0.08em; color: var(--navy); }
+    .pitch h3 { font-size: 1.2rem; color: var(--deep); line-height: 1.3; }
+    .sector { font-size: 0.88rem; color: var(--muted); }
+    .call {
+      flex-shrink: 0; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 0.25rem 0.7rem; border-radius: 999px; background: var(--navy); color: #fff;
+    }
+    .short .call { background: #9B2C2C; }
+    .neutral .call { background: #7A8CA0; }
+    .stats { display: flex; gap: 1.25rem; flex-wrap: wrap; margin: 1rem 0 0.75rem; }
+    .stat { display: flex; flex-direction: column; }
+    .stat b { font-size: 1.15rem; color: var(--deep); }
+    .stat span { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em; }
+    .pitch p.summary { font-size: 0.95rem; flex: 1; }
+    .pitch .btn { align-self: flex-start; margin-top: 1rem; }
+    .note { margin-top: 2rem; font-size: 0.85rem; color: var(--muted); }
+
+    .pitch[hidden] { display: none; }
+    @media (max-width: 760px) { .pitch-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <nav aria-label="Main">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">Bennett <span>Lee</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html#education">Education</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#additional">Additional</a></li>
+        <li><a class="active" href="research.html" aria-current="page">Research</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+        <li><a class="nav-cta" href="Lee_Bennett_Resume_2026.pdf" target="_blank" rel="noopener">Resume ↓</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero small">
+    <div class="hero-inner">
+      <p class="hi">Research</p>
+      <h1>Stock pitches</h1>
+      <p class="lede">
+        A selection of my write-ups: longs, a short, and a couple where I like the business but not yet the price.
+        Each card has the headline call; click through for the full PDF.
+      </p>
+    </div>
+  </header>
+
+  <main>
+    <div class="filters" role="group" aria-label="Filter pitches">
+      <button type="button" data-filter="all" aria-pressed="true">All</button>
+      <button type="button" data-filter="long" aria-pressed="false">Long</button>
+      <button type="button" data-filter="short" aria-pressed="false">Short</button>
+      <button type="button" data-filter="neutral" aria-pressed="false">Neutral</button>
+    </div>
+
+    <div class="pitch-grid">
+
+      <article class="pitch long" data-call="long">
+        <div class="pitch-head">
+          <div>
+            <div class="ticker">NYSE: FIX · Nov 2026</div>
+            <h3>Comfort Systems USA</h3>
+            <div class="sector">Industrials · Mechanical &amp; Electrical Contracting</div>
+          </div>
+          <span class="call">Long</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>$1,807</b><span>Price target</span></div>
+          <div class="stat"><b>~47.5%</b><span>Upside (~2 yr)</span></div>
+          <div class="stat"><b>20.0x</b><span>FY28 P/E</span></div>
+        </div>
+        <p class="summary">The market treats FIX as a data center trade, but the AI build-out has permanently upgraded the business: bigger, higher-margin projects, a skilled-labor shortage that will take a generation to fix, and a modular-plus-field-labor platform peers are paying billions to copy.</p>
+        <a class="btn" href="research/FIX_Comfort_Systems_Long.pdf" target="_blank" rel="noopener">Read the pitch (PDF)</a>
+      </article>
+
+      <article class="pitch short" data-call="short">
+        <div class="pitch-head">
+          <div>
+            <div class="ticker">NASDAQ: CMPR · Sep 2026</div>
+            <h3>Cimpress plc</h3>
+            <div class="sector">Commercial Printing Services</div>
+          </div>
+          <span class="call">Short</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>$59.25</b><span>Price target</span></div>
+          <div class="stat"><b>~21%</b><span>Downside</span></div>
+          <div class="stat"><b>DCF</b><span>5.0x exit EBITDA</span></div>
+        </div>
+        <p class="summary">Growing spend per customer is masking a shrinking VistaPrint customer base, acquisition costs are outrunning customer value, and AI is eroding the discovery and design advantages behind VistaPrint's premium margins.</p>
+        <a class="btn" href="research/CMPR_Cimpress_Short.pdf" target="_blank" rel="noopener">Read the pitch (PDF)</a>
+      </article>
+
+      <article class="pitch long" data-call="long">
+        <div class="pitch-head">
+          <div>
+            <div class="ticker">PETR4-BR</div>
+            <h3>Petrobras</h3>
+            <div class="sector">Energy · Integrated Oil &amp; Gas</div>
+          </div>
+          <span class="call">Long</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>R$57.53</b><span>Intrinsic value</span></div>
+          <div class="stat"><b>R$43.11</b><span>Price at pitch</span></div>
+          <div class="stat"><b>25.1%</b><span>Margin of safety</span></div>
+        </div>
+        <p class="summary">A high-quality integrated energy company trading at a heavy political discount. Record production and low-cost pre-salt assets support durable cash flows, and the multiple prices in a worse outcome than the fundamentals justify.</p>
+        <a class="btn" href="research/PETR4_Petrobras.pdf" target="_blank" rel="noopener">Read the pitch (PDF)</a>
+      </article>
+
+      <article class="pitch neutral" data-call="neutral">
+        <div class="pitch-head">
+          <div>
+            <div class="ticker">HONA</div>
+            <h3>Honeywell Aerospace</h3>
+            <div class="sector">Aerospace &amp; Defense · Initiation</div>
+          </div>
+          <span class="call">2 Stars</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>$227</b><span>Base case</span></div>
+          <div class="stat"><b>$362</b><span>Bull case</span></div>
+          <div class="stat"><b>$172</b><span>Bear case</span></div>
+        </div>
+        <p class="summary">A high-quality aerospace franchise with mission-critical content, a large installed base and high switching costs, but fairly priced until the newly standalone company proves out supply-chain fixes, platform wins and margin expansion.</p>
+        <a class="btn" href="research/HONA_Honeywell_Aerospace.pdf" target="_blank" rel="noopener">Read the pitch (PDF)</a>
+      </article>
+
+      <article class="pitch long" data-call="long">
+        <div class="pitch-head">
+          <div>
+            <div class="ticker">3407-JP</div>
+            <h3>Asahi Kasei</h3>
+            <div class="sector">Materials · Diversified Chemicals</div>
+          </div>
+          <span class="call">Long</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>¥2,319</b><span>Intrinsic value</span></div>
+          <div class="stat"><b>¥1,666</b><span>Price at pitch</span></div>
+          <div class="stat"><b>12.9x</b><span>Exit P/FCFE</span></div>
+        </div>
+        <p class="summary">The re-rating is incomplete: the portfolio still carries a conglomerate and chemicals discount despite a growing contribution from Healthcare, AI-linked electronics materials, and overseas Homes.</p>
+        <a class="btn" href="research/3407_Asahi_Kasei.pdf" target="_blank" rel="noopener">Read the pitch (PDF)</a>
+      </article>
+
+      <article class="pitch long" data-call="long">
+        <div class="pitch-head">
+          <div>
+            <div class="ticker">NASDAQ: IOT · Apr 2026</div>
+            <h3>Samsara</h3>
+            <div class="sector">IoT · Application Software</div>
+          </div>
+          <span class="call">Long</span>
+        </div>
+        <div class="stats">
+          <div class="stat"><b>$48</b><span>Price target</span></div>
+          <div class="stat"><b>~42%</b><span>Upside (2 yr)</span></div>
+          <div class="stat"><b>8.5x</b><span>FY29E EV/Sales</span></div>
+        </div>
+        <p class="summary">A proprietary data flywheel across 24,000 customers, a massively underpenetrated TAM, and a steady mix shift toward large, multi-product customers.</p>
+        <a class="btn" href="research/IOT_Samsara_Long.pdf" target="_blank" rel="noopener">Read the pitch (PDF)</a>
+      </article>
+
+    </div>
+
+    <p class="note">These write-ups are personal and academic work, reflect my views as of the date written, and are not investment advice.</p>
+  </main>
+
+  <footer>
+    © 2026 Bennett Lee · <a href="https://www.linkedin.com/in/bennettlee1/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/blee1236" target="_blank" rel="noopener">GitHub</a>
+  </footer>
+
+  <script>
+    // Simple Long / Short / Neutral filter
+    const buttons = document.querySelectorAll('.filters button');
+    const cards = document.querySelectorAll('.pitch');
+    buttons.forEach(btn => btn.addEventListener('click', () => {
+      buttons.forEach(b => b.setAttribute('aria-pressed', b === btn));
+      const f = btn.dataset.filter;
+      cards.forEach(c => { c.hidden = !(f === 'all' || c.dataset.call === f); });
+    }));
+  </script>
+</body>
+</html>
