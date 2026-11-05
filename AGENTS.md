@@ -7,7 +7,7 @@ Any AI agent or assistant editing this repo must follow these rules.
 
 These must never appear in any committed file, page, metadata, or commit message:
 
-- **Phone number** (it is on the CV PDF; do not copy it to the site).
+- **Phone number** in any page text or HTML (the downloadable CV PDF is the one approved exception — see below).
 - Home address or any street-level location (city/state as listed on the CV is fine).
 - Date of birth, ID numbers, or any government/financial identifiers.
 - Passwords, API keys, tokens, or any `.env` contents.
@@ -15,8 +15,10 @@ These must never appear in any committed file, page, metadata, or commit message
 - Confidential or non-public employer information: internal fund holdings beyond what is on the CV,
   client names from Barclays, non-public research, model outputs, or PM discussions.
 - Anything about other people (classmates, colleagues, references) without their consent.
-- The raw CV PDF (`Lee_Bennett_Resume_2026.pdf`) — it contains the phone number. Do not link to it or
-  commit it unless Bennett provides a redacted version and approves it.
+
+**Approved exception (2026-11-05):** Bennett explicitly approved publishing the original CV PDF
+(`Lee_Bennett_Resume_2026.pdf`), phone number included, as a download on the site. Only that file is
+approved. Ask again before publishing any other or updated CV file.
 
 ## 2. Ask Bennett first before
 
