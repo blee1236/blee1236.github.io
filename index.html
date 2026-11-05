@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bennett Lee — Investing, Credit &amp; Value</title>
+  <meta name="description" content="Bennett Lee — MBA candidate in the Value Investing Program at Columbia Business School. Former Barclays corporate banker.">
+  <style>
+    :root {
+      --columbia: #B9D9EB;
+      --columbia-soft: #E6F1F8;
+      --navy: #1D4F91;
+      --deep: #0C2340;
+      --bg: #F7FAFC;
+      --card: #FFFFFF;
+      --text: #1A2B3C;
+      --muted: #55697D;
+      --radius: 14px;
+      --shadow: 0 2px 10px rgba(12, 35, 64, 0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: var(--navy); }
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+
+    /* ---------- Nav ---------- */
+    nav {
+      position: sticky; top: 0; z-index: 10;
+      background: var(--deep);
+      border-bottom: 3px solid var(--columbia);
+    }
+    .nav-inner {
+      max-width: 1040px; margin: 0 auto; padding: 0.85rem 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    }
+    .brand { color: #fff; font-weight: 700; text-decoration: none; letter-spacing: 0.02em; }
+    .brand span { color: var(--columbia); }
+    .nav-links { display: flex; gap: 1.4rem; list-style: none; flex-wrap: wrap; }
+    .nav-links a {
+      color: #DCE9F3; text-decoration: none; font-size: 0.95rem; font-weight: 500;
+      padding-bottom: 2px; border-bottom: 2px solid transparent;
+    }
+    .nav-links a:hover { color: #fff; border-bottom-color: var(--columbia); }
+
+    /* ---------- Hero ---------- */
+    header.hero {
+      background: linear-gradient(135deg, var(--columbia) 0%, var(--columbia-soft) 100%);
+      padding: 4.5rem 1.5rem 3.5rem;
+    }
+    .hero-inner { max-width: 1040px; margin: 0 auto; }
+    .hero .hi { color: var(--navy); font-weight: 600; font-size: 1.05rem; }
+    .hero h1 { color: var(--deep); font-size: clamp(2.4rem, 6vw, 3.6rem); line-height: 1.1; margin: 0.3rem 0 0.9rem; }
+    .hero p.lede { font-size: 1.15rem; max-width: 640px; color: #23384D; }
+    .links { margin-top: 1.6rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .btn {
+      display: inline-block; padding: 0.6rem 1.15rem; border-radius: 999px;
+      font-weight: 600; font-size: 0.95rem; text-decoration: none;
+      background: var(--navy); color: #fff; border: 2px solid var(--navy);
+      transition: transform .15s ease, background .15s ease;
+    }
+    .btn:hover { transform: translateY(-2px); background: var(--deep); border-color: var(--deep); }
+    .btn.ghost { background: transparent; color: var(--navy); }
+    .btn.ghost:hover { background: var(--navy); color: #fff; }
+
+    /* ---------- Section tiles ---------- */
+    .tiles {
+      max-width: 1040px; margin: -1.75rem auto 0; padding: 0 1.5rem;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+      position: relative;
+    }
+    .tile {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 1.2rem 1.3rem; text-decoration: none; color: var(--text);
+      border-top: 4px solid var(--navy);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .tile:hover { transform: translateY(-3px); box-shadow: 0 8px 22px rgba(12,35,64,0.12); }
+    .tile .num { font-size: 0.8rem; font-weight: 700; color: var(--navy); letter-spacing: 0.08em; }
+    .tile h2 { font-size: 1.15rem; color: var(--deep); margin: 0.15rem 0 0.25rem; }
+    .tile p { font-size: 0.9rem; color: var(--muted); }
+
+    /* ---------- Sections ---------- */
+    main { max-width: 1040px; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
+    section { padding-top: 3rem; }
+    .section-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 1.25rem; }
+    .section-head h2 { font-size: 1.7rem; color: var(--deep); }
+    .section-head .bar { flex: 1; height: 2px; background: var(--columbia); }
+    .section-head a.top { font-size: 0.85rem; text-decoration: none; color: var(--muted); }
+    .section-head a.top:hover { color: var(--navy); }
+
+    .card {
+      background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+      padding: 1.5rem 1.6rem; margin-bottom: 1.1rem;
+      border-left: 5px solid var(--columbia);
+    }
+    .card-top { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .card h3 { font-size: 1.15rem; color: var(--deep); letter-spacing: 0.01em; }
+    .meta { text-align: right; color: var(--muted); font-size: 0.9rem; }
+    .role { font-weight: 600; color: var(--navy); margin-top: 0.15rem; }
+    .role .dates { font-weight: 400; color: var(--muted); }
+    .blurb { font-style: italic; color: var(--muted); font-size: 0.95rem; margin-top: 0.2rem; }
+    .card ul { margin: 0.7rem 0 0 1.15rem; }
+    .card li { margin-bottom: 0.4rem; }
+    .card li::marker { color: var(--navy); }
+    .sub { margin-top: 1.1rem; }
+    .kv { margin-top: 0.7rem; }
+    .kv dt { font-weight: 700; color: var(--navy); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 0.8rem; }
+    .kv dd { margin-top: 0.15rem; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-top: 0.4rem; }
+    .chip {
+      background: var(--columbia-soft); color: var(--deep); border: 1px solid var(--columbia);
+      border-radius: 999px; padding: 0.25rem 0.75rem; font-size: 0.88rem;
+    }
+    .win { background: var(--navy); color: #fff; border-color: var(--navy); font-weight: 600; }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+
+    footer {
+      background: var(--deep); color: #C9DAE8; text-align: center;
+      padding: 2rem 1.5rem; font-size: 0.9rem;
+    }
+    footer a { color: var(--columbia); }
+
+    @media (max-width: 760px) {
+      .tiles, .grid-2 { grid-template-columns: 1fr; }
+      .meta { text-align: left; }
+      .nav-links { gap: 1rem; }
+      header.hero { padding-top: 3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav aria-label="Main">
+    <div class="nav-inner">
+      <a class="brand" href="#top">Bennett <span>Lee</span></a>
+      <ul class="nav-links">
+        <li><a href="#education">Education</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#additional">Additional</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero" id="top">
+    <div class="hero-inner">
+      <p class="hi">Hi, I'm</p>
+      <h1>Bennett Lee</h1>
+      <p class="lede">
+        MBA candidate in Columbia Business School's Value Investing Program. I spent six years at Barclays
+        underwriting TMT credits, and now I spend my time digging into equities, pitching ideas, and
+        talking to anyone who knows an industry better than I do.
+      </p>
+      <div class="links">
+        <a class="btn" href="mailto:blee27@gsb.columbia.edu">Email me</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/bennettlee1/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn ghost" href="https://github.com/blee1236" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="tiles" role="navigation" aria-label="Section shortcuts">
+    <a class="tile" href="#education">
+      <div class="num">01</div>
+      <h2>Education</h2>
+      <p>Columbia Business School MBA · Rutgers Business School BS</p>
+    </a>
+    <a class="tile" href="#experience">
+      <div class="num">02</div>
+      <h2>Experience</h2>
+      <p>American Century · Rome Capital · Barclays</p>
+    </a>
+    <a class="tile" href="#additional">
+      <div class="num">03</div>
+      <h2>Additional Info</h2>
+      <p>Skills, tools &amp; what I do for fun</p>
+    </a>
+  </div>
+
+  <main>
+
+    <!-- ================= EDUCATION ================= -->
+    <section id="education" aria-labelledby="edu-h">
+      <div class="section-head">
+        <h2 id="edu-h">Education</h2><span class="bar"></span><a class="top" href="#top">↑ Top</a>
+      </div>
+
+      <article class="card">
+        <div class="card-top">
+          <div>
+            <h3>Columbia Business School</h3>
+            <div class="role">MBA, Value Investing Program</div>
+          </div>
+          <div class="meta">New York, NY<br>2025 – 2027</div>
+        </div>
+        <dl class="kv">
+          <dt>Stock Competitions</dt>
+          <dd>
+            <div class="chips">
+              <span class="chip win">🏆 1st Place: Chicago Booth Equity Pitch Competition</span>
+              <span class="chip">Hawkshaw Short Pitch Competition: advanced to 2nd round, Top 5 of 60</span>
+              <span class="chip">Neuberger Berman Sustainability Challenge</span>
+              <span class="chip">Kawaja Growth Stock Pitch Challenge</span>
+            </div>
+          </dd>
+          <dt>Activities</dt>
+          <dd>VP of Careers, Columbia Student Investment Management Association (CSIMA); Hermes Society</dd>
+          <dt>Coursework</dt>
+          <dd>
+            <div class="chips">
+              <span class="chip">Applied Value Investing</span>
+              <span class="chip">Modern Value</span>
+              <span class="chip">Applied Security Analysis</span>
+              <span class="chip">Activist Investing in Small Cap Companies</span>
+              <span class="chip">Earnings Quality and Fundamental Analysis</span>
+              <span class="chip">The Credit Superhighway</span>
+            </div>
+          </dd>
+        </dl>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <div>
+            <h3>Rutgers Business School</h3>
+            <div class="role">BS, Business Analytics &amp; Information Technology</div>
+          </div>
+          <div class="meta">New Brunswick, NJ<br>2015 – 2019</div>
+        </div>
+        <dl class="kv">
+          <dt>Internships</dt>
+          <dd>Interned at L'Oréal on the Data Analytics &amp; Strategy team from January–August 2018</dd>
+        </dl>
+      </article>
+    </section>
+
+    <!-- ================= EXPERIENCE ================= -->
+    <section id="experience" aria-labelledby="exp-h">
+      <div class="section-head">
+        <h2 id="exp-h">Experience</h2><span class="bar"></span><a class="top" href="#top">↑ Top</a>
+      </div>
+
+      <article class="card">
+        <div class="card-top">
+          <div>
+            <h3>American Century Investments</h3>
+            <div class="role">Summer Investment Associate</div>
+          </div>
+          <div class="meta">Kansas City, MO<br>2026</div>
+        </div>
+        <ul>
+          <li>Rotated across three teams over 12 weeks: U.S. Large Cap Growth ($14bn), U.S. Select ($6bn) and Ultra ($27bn), and Non-U.S. Intrinsic Value ($530mm), adapting underwriting to each team's distinct framework</li>
+          <li>Initiated coverage on 6 of 8 screened names across aerospace, energy, and industrials, writing full equity research reports with bull, base, and bear case models; updated models and theses through quarterly earnings</li>
+          <li>Drove 2 buy decisions (BE and FIX) by pitching all 6 names to Portfolio Managers in hour-long presentations with live Q&amp;A and countering pushback with follow-up diligence</li>
+          <li>Built variant views through calls with management, IR, sell-side analysts, and third-party experts; leveraged AI tools to streamline research and model maintenance</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <div>
+            <h3>Rome Capital Ltd.</h3>
+            <div class="role">Fall Investment Analyst (In-Semester Internship)</div>
+            <div class="blurb">Hedge fund focused on special situations and small/mid-cap growth equities</div>
+          </div>
+          <div class="meta">New York, NY<br>2025</div>
+        </div>
+        <ul>
+          <li>Covered 3 portfolio and pipeline names (EVLV, XTRAF, AIOT) across AI-enabled security screening and fleet telematics, updating financial models across upside, base, and downside cases to sharpen risk/reward</li>
+          <li>Built a comparative view across EVLV and XTRAF, two direct competitors in AI weapons-detection screening, benchmarking win rates, pricing, and customer retention to frame the relative-value case</li>
+          <li>Conducted dozens of primary research calls with customers, competitors, channel partners, and former employees to build variant views and map industry trends</li>
+          <li>Drafted thesis points and investment write-ups covering key drivers, valuation, and risks to pressure-test Portfolio Manager views</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <div class="card-top">
+          <div>
+            <h3>Barclays Bank PLC</h3>
+          </div>
+          <div class="meta">New York, NY<br>2019 – 2025</div>
+        </div>
+        <div class="sub">
+          <div class="role">Corporate Banking Associate/Analyst, TMT Coverage <span class="dates">(2021 – 2025)</span></div>
+          <ul>
+            <li>Underwrote TMT credits through financial, liquidity, and cash flow analysis to assess deal viability and borrower health, sourcing data via Capital IQ and Refinitiv</li>
+            <li>Owned day-to-day coverage for multiple clients across both investment and sub-investment grade spectrum, leading in-person meetings and advising on treasury needs</li>
+            <li>Rated "Outstanding" (top performance tier) in 2 of 3 years as Analyst</li>
+          </ul>
+        </div>
+        <div class="sub">
+          <div class="role">Graduate Operations Analyst <span class="dates">(2019 – 2021)</span></div>
+          <ul>
+            <li>Rotated across Cards Strategy and KYC/Onboarding; led process redesign that reallocated 3 FTEs of work and consolidated U.S. and India teams into a single reporting hierarchy</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <!-- ================= ADDITIONAL INFORMATION ================= -->
+    <section id="additional" aria-labelledby="add-h">
+      <div class="section-head">
+        <h2 id="add-h">Additional Information</h2><span class="bar"></span><a class="top" href="#top">↑ Top</a>
+      </div>
+      <div class="grid-2">
+        <article class="card">
+          <h3>Skills &amp; Tools</h3>
+          <div class="chips" style="margin-top:0.7rem">
+            <span class="chip">Financial Modeling &amp; Valuation</span>
+            <span class="chip">Credit &amp; Covenant Analysis</span>
+            <span class="chip">Excel</span>
+            <span class="chip">Capital IQ</span>
+            <span class="chip">LSEG (Refinitiv)</span>
+            <span class="chip">FactSet</span>
+          </div>
+        </article>
+        <article class="card">
+          <h3>Interests</h3>
+          <div class="chips" style="margin-top:0.7rem">
+            <span class="chip">📈 Personal Investing</span>
+            <span class="chip">🏀 Basketball</span>
+            <span class="chip">🎸 Guitar</span>
+            <span class="chip">🍜 Writing Yelp Reviews (6 years Yelp Elite)</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section id="contact" aria-labelledby="contact-h">
+      <div class="section-head">
+        <h2 id="contact-h">Say hello</h2><span class="bar"></span><a class="top" href="#top">↑ Top</a>
+      </div>
+      <article class="card">
+        <p>Always happy to trade stock ideas, talk credit, or swap restaurant recommendations.</p>
+        <div class="links">
+          <a class="btn" href="mailto:blee27@gsb.columbia.edu">blee27@gsb.columbia.edu</a>
+          <a class="btn ghost" href="https://www.linkedin.com/in/bennettlee1/" target="_blank" rel="noopener">LinkedIn</a>
+          <a class="btn ghost" href="https://github.com/blee1236" target="_blank" rel="noopener">GitHub</a>
+        </div>
+      </article>
+    </section>
+
+  </main>
+
+  <footer>
+    © 2026 Bennett Lee · <a href="https://www.linkedin.com/in/bennettlee1/" target="_blank" rel="noopener">LinkedIn</a> · <a href="https://github.com/blee1236" target="_blank" rel="noopener">GitHub</a>
+  </footer>
+
+</body>
+</html>
