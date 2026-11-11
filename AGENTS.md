@@ -25,6 +25,11 @@ approved. Ask again before publishing any other or updated CV file.
 publishing the Petrobras PDF despite its "For Internal Use Only" label. Ask before adding any new pitch,
 and check each new one for employer, confidentiality, or third-party labels.
 
+**Stock dashboard (`dashboard.html`, 2026-11-11):** copied from Bennett's recruiting files with his
+Finnhub API key removed. Visitors paste their own key, which stays in their browser's localStorage.
+Never hard-code a key back into this page; when syncing from the original
+`Recruiting/Stock_Dashboard.html`, strip the `API_KEY` line again.
+
 ## 2. Ask Bennett first before
 
 - **Any `git push`, deploy, or publishing action** — nothing goes to GitHub without explicit approval.
