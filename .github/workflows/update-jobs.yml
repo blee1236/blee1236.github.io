@@ -1,0 +1,41 @@
+# Rebuilds jobs.html every morning from firms' public career-site feeds.
+# Only jobs.html is ever committed by this workflow.
+name: Update jobs page
+
+on:
+  schedule:
+    - cron: "0 11 * * *" # 11:00 UTC = 6am New York (7am during daylight time)
+  workflow_dispatch: {} # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-jobs
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild jobs.html
+        run: python scripts/fetch_jobs.py
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- jobs.html; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "jobs-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add jobs.html
+          git commit -m "Update jobs page ($(date -u +%Y-%m-%d))"
+          git push

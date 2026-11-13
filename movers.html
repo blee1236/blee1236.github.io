@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>S&amp;P 500 Movers — Bennett Lee</title>
+<meta name="description" content="Live top 10 gainers and losers in the S&P 500.">
+<style>
+:root{
+  --bg:#f5f6f8; --surface:#ffffff; --surface2:#f0f2f5; --ink:#15181d; --muted:#626a75; --line:#e2e5ea;
+  --accent:#1D4F91; --up:#0f8a4f; --down:#cc2f3a; --flat:#8a929c; --tile:#e9ecf0;
+  --up-flash:rgba(15,138,79,.18); --down-flash:rgba(204,47,58,.16);
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#0e1116; --surface:#151a21; --surface2:#1b212a; --ink:#e6e9ee; --muted:#8d96a3; --line:#252c36;
+  --accent:#7aa7ff; --up:#35c27e; --down:#ff5c66; --flat:#7c8591; --tile:#1f252e;
+  --up-flash:rgba(53,194,126,.22); --down-flash:rgba(255,92,102,.2);
+}}
+:root[data-theme="dark"]{
+  --bg:#0e1116; --surface:#151a21; --surface2:#1b212a; --ink:#e6e9ee; --muted:#8d96a3; --line:#252c36;
+  --accent:#7aa7ff; --up:#35c27e; --down:#ff5c66; --flat:#7c8591; --tile:#1f252e;
+  --up-flash:rgba(53,194,126,.22); --down-flash:rgba(255,92,102,.2);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif}
+a{color:var(--accent)}
+.num{font-variant-numeric:tabular-nums}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--flat)}
+button,input{font:inherit;color:var(--ink)}
+.wrap{max-width:1440px;margin:0 auto;padding:18px 16px 48px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:14px}
+header h1{font-size:20px;margin:0;letter-spacing:-.01em}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;border-radius:999px;padding:3px 10px;background:var(--surface2);color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--flat)}
+.pill.live .dot{background:var(--up);box-shadow:0 0 0 3px var(--up-flash)}
+.pill.open{color:var(--up)}
+.spacer{flex:1}
+.ctrl{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 11px;cursor:pointer}
+.btn:hover{border-color:var(--accent)}
+.strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin-bottom:14px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-size:18px;font-weight:600}
+.kpi .s{font-size:12px}
+.prog{height:6px;border-radius:3px;background:var(--surface2);margin-top:6px;overflow:hidden}
+.prog i{display:block;height:100%;background:var(--accent);transition:width .4s}
+.sectors{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-bottom:14px}
+.sec{border-radius:8px;padding:8px 10px;border:1px solid var(--line)}
+.sec b{display:block;font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sec span{font-size:14px;font-weight:700}
+.sec small{display:block;font-size:11px;color:var(--muted)}
+.boards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.panel h2{margin:0;padding:12px 14px;font-size:15px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+.panel h2 .tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:999px;color:#fff}
+.panel.gain h2 .tag{background:var(--up)} .panel.lose h2 .tag{background:var(--down)}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:640px}
+th,td{padding:7px 8px;text-align:right;white-space:nowrap;border-bottom:1px solid var(--line)}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+th:nth-child(2),td:nth-child(2),th:first-child,td:first-child{text-align:left}
+td.rk{color:var(--muted);width:24px}
+tbody tr{cursor:pointer}
+tbody tr:hover,tbody tr.sel{background:var(--surface2)}
+tbody tr.sel{box-shadow:inset 3px 0 0 var(--accent)}
+tr.empty td{text-align:center;color:var(--muted);cursor:default}
+.tk{display:flex;align-items:center;gap:8px}
+.tk img,.tk .ph{width:22px;height:22px;border-radius:5px;background:var(--surface2);object-fit:contain;flex:none}
+.tk b{font-size:14px}
+.tk small{display:block;color:var(--muted);font-size:12px;max-width:170px;overflow:hidden;text-overflow:ellipsis}
+td.px{font-weight:600;transition:background-color .6s}
+td.px.fu{background:var(--up-flash);transition:none}
+td.px.fd{background:var(--down-flash);transition:none}
+.chgbox{display:inline-block;min-width:66px;border-radius:5px;padding:1px 6px;font-weight:600}
+.range{position:relative;width:80px;height:6px;border-radius:3px;background:var(--surface2);display:inline-block;vertical-align:middle}
+.range i{position:absolute;top:-3px;width:3px;height:12px;border-radius:2px;background:var(--ink)}
+.age{font-size:12px;color:var(--muted)}
+.age.live{color:var(--up);font-weight:600}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(440px,100%);background:var(--surface);border-left:1px solid var(--line);box-shadow:-12px 0 30px rgba(0,0,0,.12);transform:translateX(105%);transition:transform .2s;z-index:20;overflow-y:auto;padding:18px}
+.drawer.open{transform:none}
+.drawer h2{margin:0;font-size:20px}
+.drawer .x{position:absolute;top:12px;right:12px}
+.big{font-size:28px;font-weight:700}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:4px 16px;margin:12px 0}
+.stats div{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:4px 0;font-size:13px}
+.stats span:first-child{color:var(--muted)}
+.drawer h4{margin:16px 0 6px;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+.news a{display:block;color:var(--ink);text-decoration:none;padding:7px 0;border-bottom:1px solid var(--line)}
+.news a:hover b{color:var(--accent)}
+.news b{font-weight:600;font-size:13px}
+.news small{display:block;color:var(--muted);font-size:11px}
+.note{color:var(--muted);font-size:12px}
+footer{margin-top:14px;color:var(--muted);font-size:12px;display:flex;flex-wrap:wrap;gap:6px 16px}
+.site-nav{position:sticky;top:0;z-index:15;background:#0C2340;border-bottom:3px solid #B9D9EB}
+.site-nav .in{max-width:1440px;margin:0 auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px 16px;flex-wrap:wrap}
+.site-nav .brand{color:#fff;font-weight:700;text-decoration:none;font-size:15px}
+.site-nav .brand span{color:#B9D9EB}
+.site-nav ul{display:flex;gap:16px;list-style:none;margin:0;padding:0;flex-wrap:wrap}
+.site-nav a{color:#DCE9F3;text-decoration:none;font-size:14px;font-weight:500;padding-bottom:2px;border-bottom:2px solid transparent}
+.site-nav a:hover,.site-nav a.active{color:#fff;border-bottom-color:#B9D9EB}
+.site-nav a.cta{background:#B9D9EB;color:#0C2340;font-weight:700;padding:3px 12px;border-radius:999px;border:0}
+.keygate{padding:22px;max-width:640px;margin-bottom:14px}
+.keygate h2{margin:0 0 6px;font-size:18px;border:0;padding:0}
+.keygate p{margin:0 0 12px;color:var(--muted)}
+.keygate form{display:flex;gap:8px;flex-wrap:wrap}
+.keygate input{flex:1;min-width:220px;background:var(--surface2);border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+.keygate .err{color:var(--down);font-weight:600}
+@media (max-width:1100px){ .boards{grid-template-columns:1fr} }
+@media (max-width:640px){ header h1{font-size:18px} }
+</style>
+</head>
+<body>
+<nav class="site-nav" aria-label="Main"><div class="in">
+  <a class="brand" href="index.html">Bennett <span>Lee</span></a>
+  <ul>
+    <li><a href="index.html#education">Education</a></li>
+    <li><a href="index.html#experience">Experience</a></li>
+    <li><a href="index.html#additional">Additional</a></li>
+    <li><a href="research.html">Research</a></li>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a class="active" href="movers.html" aria-current="page">Movers</a></li>
+    <li><a href="jobs.html">Jobs</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+    <li><a class="cta" href="Lee_Bennett_Resume_2026.pdf" target="_blank" rel="noopener">Resume ↓</a></li>
+  </ul>
+</div></nav>
+<div class="wrap">
+<header>
+  <h1>S&amp;P 500 Movers</h1>
+  <span class="pill" id="mkt"><span class="dot"></span><span>Market —</span></span>
+  <span class="pill" id="feed"><span class="dot"></span><span>Connecting…</span></span>
+  <span class="spacer"></span>
+  <div class="ctrl">
+    <button class="btn" id="theme" title="Toggle theme">◐</button>
+    <button class="btn" id="forget" title="Remove your saved Finnhub key from this browser" hidden>Forget key</button>
+  </div>
+</header>
+
+<section class="panel keygate" id="keygate" hidden>
+  <h2>Add a Finnhub key to load live prices</h2>
+  <p>This page ranks every S&amp;P 500 stock by today's move using live quotes from Finnhub, so it needs a free API key.
+     Your key is saved only in your own browser and never sent anywhere except Finnhub. (It's shared with the Dashboard tab, so you only enter it once.)</p>
+  <p class="err" id="keyerr" hidden>That key didn't work. Check it and try again.</p>
+  <form id="keyf"><input id="keyin" placeholder="Paste your Finnhub API key" aria-label="Finnhub API key" autocomplete="off" spellcheck="false" required>
+    <button class="btn">Load movers</button></form>
+  <p class="note" style="margin-top:10px">No key? Get one free at <a href="https://finnhub.io/register" target="_blank" rel="noopener">finnhub.io</a>.</p>
+</section>
+
+<div id="main">
+  <section class="strip" id="strip"></section>
+  <section class="sectors" id="sectors" aria-label="Sector performance"></section>
+  <div class="boards">
+    <section class="panel gain"><h2><span class="tag">▲ Top 10</span> Gainers</h2><div class="tablewrap"><table>
+      <thead><tr><th>#</th><th>Ticker</th><th>Last</th><th>Chg</th><th>Chg %</th><th>Today</th><th>Day range</th><th>Updated</th></tr></thead>
+      <tbody id="gBody"></tbody></table></div></section>
+    <section class="panel lose"><h2><span class="tag">▼ Top 10</span> Losers</h2><div class="tablewrap"><table>
+      <thead><tr><th>#</th><th>Ticker</th><th>Last</th><th>Chg</th><th>Chg %</th><th>Today</th><th>Day range</th><th>Updated</th></tr></thead>
+      <tbody id="lBody"></tbody></table></div></section>
+  </div>
+</div>
+<footer>
+  <span>Data: Finnhub (free tier). All 503 S&amp;P 500 stocks are re-priced in a rolling scan of about 55 quotes a minute, so a full pass takes about 9 minutes.</span>
+  <span>The current top and bottom 10 stream live trades over WebSocket, so their prices update in real time.</span>
+  <span>Index members as of November 2026.</span>
+  <span id="upd"></span>
+</footer>
+</div>
+
+<aside class="drawer" id="drawer" aria-label="Ticker detail"></aside>
+
+<script>
+const UNIVERSE = [["MMM","3M","Industrials"],["AOS","A. O. Smith","Industrials"],["ABT","Abbott Laboratories","Health Care"],["ABBV","AbbVie","Health Care"],["ACN","Accenture","Information Technology"],["ADBE","Adobe Inc.","Information Technology"],["AMD","Advanced Micro Devices","Information Technology"],["AES","AES Corporation","Utilities"],["AFL","Aflac","Financials"],["A","Agilent Technologies","Health Care"],["APD","Air Products","Materials"],["ABNB","Airbnb","Consumer Discretionary"],["AKAM","Akamai Technologies","Information Technology"],["ALB","Albemarle Corporation","Materials"],["ARE","Alexandria Real Estate Equities","Real Estate"],["ALGN","Align Technology","Health Care"],["ALLE","Allegion","Industrials"],["LNT","Alliant Energy","Utilities"],["ALL","Allstate","Financials"],["GOOGL","Alphabet Inc. (Class A)","Communication Services"],["GOOG","Alphabet Inc. (Class C)","Communication Services"],["MO","Altria","Consumer Staples"],["AMZN","Amazon","Consumer Discretionary"],["AMCR","Amcor","Materials"],["AEE","Ameren","Utilities"],["AEP","American Electric Power","Utilities"],["AXP","American Express","Financials"],["AIG","American International Group","Financials"],["AMT","American Tower","Real Estate"],["AWK","American Water Works","Utilities"],["AMP","Ameriprise Financial","Financials"],["AME","Ametek","Industrials"],["AMGN","Amgen","Health Care"],["APH","Amphenol","Information Technology"],["ADI","Analog Devices","Information Technology"],["AON","Aon plc","Financials"],["APA","APA Corporation","Energy"],["APO","Apollo Global Management","Financials"],["AAPL","Apple Inc.","Information Technology"],["AMAT","Applied Materials","Information Technology"],["APP","AppLovin","Communication Services"],["APTV","Aptiv","Consumer Discretionary"],["ACGL","Arch Capital Group","Financials"],["ADM","Archer Daniels Midland","Consumer Staples"],["ARES","Ares Management","Financials"],["ANET","Arista Networks","Information Technology"],["AJG","Arthur J. Gallagher & Co.","Financials"],["AIZ","Assurant","Financials"],["T","AT&T","Communication Services"],["ATO","Atmos Energy","Utilities"],["ADSK","Autodesk","Information Technology"],["ADP","Automatic Data Processing","Industrials"],["AZO","AutoZone","Consumer Discretionary"],["AVY","Avery Dennison","Materials"],["AXON","Axon Enterprise","Industrials"],["BKR","Baker Hughes","Energy"],["BALL","Ball Corporation","Materials"],["BAC","Bank of America","Financials"],["BAX","Baxter International","Health Care"],["BDX","Becton Dickinson","Health Care"],["BRK.B","Berkshire Hathaway","Financials"],["BBY","Best Buy","Consumer Discretionary"],["TECH","Bio-Techne","Health Care"],["BIIB","Biogen","Health Care"],["BLK","BlackRock","Financials"],["BX","Blackstone Inc.","Financials"],["XYZ","Block, Inc.","Financials"],["BE","Bloom Energy","Industrials"],["BNY","BNY Mellon","Financials"],["BA","Boeing","Industrials"],["BKNG","Booking Holdings","Consumer Discretionary"],["BSX","Boston Scientific","Health Care"],["BMY","Bristol Myers Squibb","Health Care"],["AVGO","Broadcom","Information Technology"],["BR","Broadridge Financial Solutions","Industrials"],["BRO","Brown & Brown","Financials"],["BF.B","Brown–Forman","Consumer Staples"],["BG","Bunge Global","Consumer Staples"],["BXP","BXP, Inc.","Real Estate"],["CHRW","C.H. Robinson","Industrials"],["CDNS","Cadence Design Systems","Information Technology"],["CPT","Camden Property Trust","Real Estate"],["COF","Capital One","Financials"],["CAH","Cardinal Health","Health Care"],["CCL","Carnival Corporation","Consumer Discretionary"],["CARR","Carrier Global","Industrials"],["CVNA","Carvana","Consumer Discretionary"],["CASY","Casey's","Consumer Staples"],["CAT","Caterpillar Inc.","Industrials"],["CBOE","Cboe Global Markets","Financials"],["CBRE","CBRE Group","Real Estate"],["CDW","CDW Corporation","Information Technology"],["COR","Cencora","Health Care"],["CNC","Centene Corporation","Health Care"],["CNP","CenterPoint Energy","Utilities"],["CF","CF Industries","Materials"],["CRL","Charles River Laboratories","Health Care"],["SCHW","Charles Schwab Corporation","Financials"],["CHTR","Charter Communications","Communication Services"],["CVX","Chevron Corporation","Energy"],["CMG","Chipotle Mexican Grill","Consumer Discretionary"],["CB","Chubb Limited","Financials"],["CHD","Church & Dwight","Consumer Staples"],["CIEN","Ciena","Information Technology"],["CI","Cigna","Health Care"],["CINF","Cincinnati Financial","Financials"],["CTAS","Cintas","Industrials"],["CSCO","Cisco","Information Technology"],["C","Citigroup","Financials"],["CFG","Citizens Financial Group","Financials"],["CLX","Clorox","Consumer Staples"],["CME","CME Group","Financials"],["CMS","CMS Energy","Utilities"],["KO","Coca-Cola Company (The)","Consumer Staples"],["CTSH","Cognizant","Information Technology"],["COHR","Coherent Corp.","Information Technology"],["COIN","Coinbase","Financials"],["CL","Colgate-Palmolive","Consumer Staples"],["CMCSA","Comcast","Communication Services"],["FIX","Comfort Systems USA","Industrials"],["COP","ConocoPhillips","Energy"],["ED","Consolidated Edison","Utilities"],["STZ","Constellation Brands","Consumer Staples"],["CEG","Constellation Energy","Utilities"],["COO","Cooper Companies (The)","Health Care"],["CPRT","Copart","Industrials"],["GLW","Corning Inc.","Information Technology"],["CPAY","Corpay","Financials"],["CSGP","CoStar Group","Real Estate"],["COST","Costco","Consumer Staples"],["CRH","CRH plc","Materials"],["CRWD","CrowdStrike","Information Technology"],["CCI","Crown Castle","Real Estate"],["CSX","CSX Corporation","Industrials"],["CMI","Cummins","Industrials"],["CVS","CVS Health","Health Care"],["DHR","Danaher Corporation","Health Care"],["DRI","Darden Restaurants","Consumer Discretionary"],["DDOG","Datadog","Information Technology"],["DVA","DaVita","Health Care"],["DECK","Deckers Brands","Consumer Discretionary"],["DE","Deere & Company","Industrials"],["DELL","Dell Technologies","Information Technology"],["DAL","Delta Air Lines","Industrials"],["DVN","Devon Energy","Energy"],["DXCM","Dexcom","Health Care"],["FANG","Diamondback Energy","Energy"],["DLR","Digital Realty","Real Estate"],["DG","Dollar General","Consumer Staples"],["DLTR","Dollar Tree","Consumer Staples"],["D","Dominion Energy","Utilities"],["DPZ","Domino's","Consumer Discretionary"],["DASH","DoorDash","Consumer Discretionary"],["DOV","Dover Corporation","Industrials"],["DOW","Dow Inc.","Materials"],["DHI","D. R. Horton","Consumer Discretionary"],["DTE","DTE Energy","Utilities"],["DUK","Duke Energy","Utilities"],["DD","DuPont","Industrials"],["ETN","Eaton Corporation","Industrials"],["EBAY","eBay Inc.","Consumer Discretionary"],["ECHO","EchoStar","Communication Services"],["ECL","Ecolab","Materials"],["EIX","Edison International","Utilities"],["EW","Edwards Lifesciences","Health Care"],["ELV","Elevance Health","Health Care"],["EME","Emcor","Industrials"],["EMR","Emerson Electric","Industrials"],["ETR","Entergy","Utilities"],["EOG","EOG Resources","Energy"],["EQT","EQT Corporation","Energy"],["EFX","Equifax","Industrials"],["EQIX","Equinix","Real Estate"],["ERIE","Erie Indemnity","Financials"],["ESS","Essex Property Trust","Real Estate"],["EL","Estée Lauder Companies (The)","Consumer Staples"],["EG","Everest Group","Financials"],["EVRG","Evergy","Utilities"],["P","Everpure","Information Technology"],["ES","Eversource Energy","Utilities"],["EXC","Exelon","Utilities"],["EXE","Expand Energy","Energy"],["EXPE","Expedia Group","Consumer Discretionary"],["EXPD","Expeditors International","Industrials"],["EXR","Extra Space Storage","Real Estate"],["XOM","ExxonMobil","Energy"],["FFIV","F5, Inc.","Information Technology"],["FDS","FactSet","Financials"],["FICO","Fair Isaac","Information Technology"],["FAST","Fastenal","Industrials"],["FRT","Federal Realty Investment Trust","Real Estate"],["FDX","FedEx","Industrials"],["FDXF","FedEx Freight","Industrials"],["FERG","Ferguson Enterprises","Industrials"],["FIS","Fidelity National Information Services","Financials"],["FITB","Fifth Third Bancorp","Financials"],["FSLR","First Solar","Information Technology"],["FE","FirstEnergy","Utilities"],["FISV","Fiserv","Financials"],["FLEX","Flex Ltd.","Information Technology"],["F","Ford Motor Company","Consumer Discretionary"],["FTNT","Fortinet","Information Technology"],["FTV","Fortive","Industrials"],["FOXA","Fox Corporation (Class A)","Communication Services"],["FOX","Fox Corporation (Class B)","Communication Services"],["BEN","Franklin Resources","Financials"],["FCX","Freeport-McMoRan","Materials"],["GRMN","Garmin","Consumer Discretionary"],["IT","Gartner","Information Technology"],["GE","GE Aerospace","Industrials"],["GEHC","GE HealthCare","Health Care"],["GEV","GE Vernova","Industrials"],["GEN","Gen Digital","Information Technology"],["GNRC","Generac","Industrials"],["GD","General Dynamics","Industrials"],["GIS","General Mills","Consumer Staples"],["GM","General Motors","Consumer Discretionary"],["GPC","Genuine Parts Company","Consumer Discretionary"],["GILD","Gilead Sciences","Health Care"],["GPN","Global Payments","Financials"],["GL","Globe Life","Financials"],["GDDY","GoDaddy","Information Technology"],["GS","Goldman Sachs","Financials"],["HAL","Halliburton","Energy"],["HIG","Hartford (The)","Financials"],["HAS","Hasbro","Consumer Discretionary"],["HCA","HCA Healthcare","Health Care"],["DOC","Healthpeak Properties","Real Estate"],["HSIC","Henry Schein","Health Care"],["HSY","Hershey Company (The)","Consumer Staples"],["HPE","Hewlett Packard Enterprise","Information Technology"],["HLT","Hilton Worldwide","Consumer Discretionary"],["HD","Home Depot (The)","Consumer Discretionary"],["HONA","Honeywell Aerospace","Industrials"],["HON","Honeywell Technologies","Industrials"],["HRL","Hormel Foods","Consumer Staples"],["HST","Host Hotels & Resorts","Real Estate"],["HWM","Howmet Aerospace","Industrials"],["HPQ","HP Inc.","Information Technology"],["HUBB","Hubbell Incorporated","Industrials"],["HUM","Humana","Health Care"],["HBAN","Huntington Bancshares","Financials"],["HII","Huntington Ingalls Industries","Industrials"],["IBM","IBM","Information Technology"],["IEX","IDEX Corporation","Industrials"],["IDXX","Idexx Laboratories","Health Care"],["ITW","Illinois Tool Works","Industrials"],["ILMN","Illumina, Inc.","Health Care"],["INCY","Incyte","Health Care"],["IR","Ingersoll Rand","Industrials"],["PODD","Insulet Corporation","Health Care"],["INTC","Intel","Information Technology"],["IBKR","Interactive Brokers","Financials"],["ICE","Intercontinental Exchange","Financials"],["IFF","International Flavors & Fragrances","Materials"],["IP","International Paper","Materials"],["INTU","Intuit","Information Technology"],["ISRG","Intuitive Surgical","Health Care"],["IVZ","Invesco","Financials"],["INVH","Invitation Homes","Real Estate"],["IQV","IQVIA","Health Care"],["IRM","Iron Mountain","Real Estate"],["JBHT","J.B. Hunt","Industrials"],["JBL","Jabil","Information Technology"],["JKHY","Jack Henry & Associates","Financials"],["J","Jacobs Solutions","Industrials"],["JNJ","Johnson & Johnson","Health Care"],["JCI","Johnson Controls","Industrials"],["JPM","JPMorgan Chase","Financials"],["KDP","Keurig Dr Pepper","Consumer Staples"],["KEY","KeyCorp","Financials"],["KEYS","Keysight Technologies","Information Technology"],["KMB","Kimberly-Clark","Consumer Staples"],["KIM","Kimco Realty","Real Estate"],["KMI","Kinder Morgan","Energy"],["KKR","KKR & Co.","Financials"],["KLAC","KLA Corporation","Information Technology"],["KHC","Kraft Heinz","Consumer Staples"],["KR","Kroger","Consumer Staples"],["LHX","L3Harris","Industrials"],["LH","Labcorp","Health Care"],["LRCX","Lam Research","Information Technology"],["LVS","Las Vegas Sands","Consumer Discretionary"],["LDOS","Leidos","Industrials"],["LEN","Lennar","Consumer Discretionary"],["LII","Lennox International","Industrials"],["LLY","Lilly (Eli)","Health Care"],["LIN","Linde plc","Materials"],["LYV","Live Nation Entertainment","Communication Services"],["LMT","Lockheed Martin","Industrials"],["L","Loews Corporation","Financials"],["LOW","Lowe's","Consumer Discretionary"],["LULU","Lululemon Athletica","Consumer Discretionary"],["LITE","Lumentum","Information Technology"],["LYB","LyondellBasell","Materials"],["MTB","M&T Bank","Financials"],["MPC","Marathon Petroleum","Energy"],["MAR","Marriott International","Consumer Discretionary"],["MRSH","Marsh McLennan","Financials"],["MLM","Martin Marietta Materials","Materials"],["MRVL","Marvell Technology","Information Technology"],["MAS","Masco","Industrials"],["MA","Mastercard","Financials"],["MKC","McCormick & Company","Consumer Staples"],["MCD","McDonald's","Consumer Discretionary"],["MCK","McKesson","Health Care"],["MDT","Medtronic","Health Care"],["MRK","Merck & Co.","Health Care"],["META","Meta Platforms","Communication Services"],["MET","MetLife","Financials"],["MTD","Mettler Toledo","Health Care"],["MGM","MGM Resorts","Consumer Discretionary"],["MCHP","Microchip Technology","Information Technology"],["MU","Micron Technology","Information Technology"],["MSFT","Microsoft","Information Technology"],["MAA","Mid-America Apartment Communities","Real Estate"],["MRNA","Moderna","Health Care"],["MDLZ","Mondelez International","Consumer Staples"],["MPWR","Monolithic Power Systems","Information Technology"],["MNST","Monster Beverage","Consumer Staples"],["MCO","Moody's Corporation","Financials"],["MS","Morgan Stanley","Financials"],["MOS","Mosaic Company (The)","Materials"],["MSI","Motorola Solutions","Information Technology"],["MSCI","MSCI","Financials"],["NDAQ","Nasdaq, Inc.","Financials"],["NTAP","NetApp","Information Technology"],["NFLX","Netflix","Communication Services"],["NEM","Newmont","Materials"],["NWSA","News Corp (Class A)","Communication Services"],["NWS","News Corp (Class B)","Communication Services"],["NEE","NextEra Energy","Utilities"],["NKE","Nike, Inc.","Consumer Discretionary"],["NI","NiSource","Utilities"],["NDSN","Nordson Corporation","Industrials"],["NSC","Norfolk Southern","Industrials"],["NTRS","Northern Trust","Financials"],["NOC","Northrop Grumman","Industrials"],["NCLH","Norwegian Cruise Line Holdings","Consumer Discretionary"],["NRG","NRG Energy","Utilities"],["NUE","Nucor","Materials"],["NVDA","Nvidia","Information Technology"],["NVR","NVR, Inc.","Consumer Discretionary"],["NXPI","NXP Semiconductors","Information Technology"],["ORLY","O'Reilly Automotive","Consumer Discretionary"],["OXY","Occidental Petroleum","Energy"],["OKTA","Okta, Inc.","Information Technology"],["ODFL","Old Dominion","Industrials"],["OMC","Omnicom Group","Communication Services"],["ON","ON Semiconductor","Information Technology"],["OKE","Oneok","Energy"],["ORCL","Oracle Corporation","Information Technology"],["OTIS","Otis Worldwide","Industrials"],["PCAR","Paccar","Industrials"],["PKG","Packaging Corporation of America","Materials"],["PLTR","Palantir Technologies","Information Technology"],["PANW","Palo Alto Networks","Information Technology"],["PH","Parker Hannifin","Industrials"],["PAYX","Paychex","Industrials"],["PYPL","PayPal","Financials"],["PNR","Pentair","Industrials"],["PEP","PepsiCo","Consumer Staples"],["PFE","Pfizer","Health Care"],["PCG","PG&E Corporation","Utilities"],["PM","Philip Morris International","Consumer Staples"],["PSX","Phillips 66","Energy"],["PNW","Pinnacle West Capital","Utilities"],["PNC","PNC Financial Services","Financials"],["PPG","PPG Industries","Materials"],["PPL","PPL Corporation","Utilities"],["PFG","Principal Financial Group","Financials"],["PG","Procter & Gamble","Consumer Staples"],["PGR","Progressive Corporation","Financials"],["PLD","Prologis","Real Estate"],["PRU","Prudential Financial","Financials"],["PTC","PTC Inc.","Information Technology"],["PEG","Public Service Enterprise Group","Utilities"],["PSA","Public Storage","Real Estate"],["PHM","PulteGroup","Consumer Discretionary"],["Q","Qnity Electronics","Information Technology"],["QCOM","Qualcomm","Information Technology"],["PWR","Quanta Services","Industrials"],["DGX","Quest Diagnostics","Health Care"],["RL","Ralph Lauren Corporation","Consumer Discretionary"],["RJF","Raymond James Financial","Financials"],["RDDT","Reddit","Communication Services"],["O","Realty Income","Real Estate"],["REG","Regency Centers","Real Estate"],["REGN","Regeneron Pharmaceuticals","Health Care"],["RF","Regions Financial Corporation","Financials"],["RSG","Republic Services","Industrials"],["RMD","ResMed","Health Care"],["RVTY","Revvity","Health Care"],["HOOD","Robinhood Markets","Financials"],["ROK","Rockwell Automation","Industrials"],["ROL","Rollins, Inc.","Industrials"],["ROP","Roper Technologies","Information Technology"],["ROST","Ross Stores","Consumer Discretionary"],["RCL","Royal Caribbean Group","Consumer Discretionary"],["RTX","RTX Corporation","Industrials"],["SPGI","S&P Global","Financials"],["CRM","Salesforce","Information Technology"],["SNDK","Sandisk","Information Technology"],["SBAC","SBA Communications","Real Estate"],["SLB","Schlumberger","Energy"],["STX","Seagate Technology","Information Technology"],["SRE","Sempra","Utilities"],["NOW","ServiceNow","Information Technology"],["SHW","Sherwin-Williams","Materials"],["SPG","Simon Property Group","Real Estate"],["SKYD","Skydance","Communication Services"],["SWKS","Skyworks Solutions","Information Technology"],["SJM","J.M. Smucker Company (The)","Consumer Staples"],["SW","Smurfit Westrock","Materials"],["SNA","Snap-on","Industrials"],["SOLV","Solventum","Health Care"],["SO","Southern Company","Utilities"],["LUV","Southwest Airlines","Industrials"],["SWK","Stanley Black & Decker","Industrials"],["SBUX","Starbucks","Consumer Discretionary"],["STT","State Street Corporation","Financials"],["STLD","Steel Dynamics","Materials"],["STE","Steris","Health Care"],["SYK","Stryker Corporation","Health Care"],["SMCI","Supermicro","Information Technology"],["SYF","Synchrony Financial","Financials"],["SNPS","Synopsys","Information Technology"],["SYY","Sysco","Consumer Staples"],["TMUS","T-Mobile US","Communication Services"],["TROW","T. Rowe Price","Financials"],["TTWO","Take-Two Interactive","Communication Services"],["TPR","Tapestry, Inc.","Consumer Discretionary"],["TRGP","Targa Resources","Energy"],["TGT","Target Corporation","Consumer Staples"],["TEL","TE Connectivity","Information Technology"],["TDY","Teledyne Technologies","Information Technology"],["TER","Teradyne","Information Technology"],["TSLA","Tesla, Inc.","Consumer Discretionary"],["TXN","Texas Instruments","Information Technology"],["TPL","Texas Pacific Land Corporation","Energy"],["TXT","Textron","Industrials"],["TMO","Thermo Fisher Scientific","Health Care"],["TJX","TJX Companies","Consumer Discretionary"],["TKO","TKO Group Holdings","Communication Services"],["TSCO","Tractor Supply","Consumer Discretionary"],["TT","Trane Technologies","Industrials"],["TDG","TransDigm Group","Industrials"],["TRV","Travelers Companies (The)","Financials"],["TRMB","Trimble Inc.","Information Technology"],["TFC","Truist Financial","Financials"],["TWLO","Twilio","Information Technology"],["TYL","Tyler Technologies","Information Technology"],["TSN","Tyson Foods","Consumer Staples"],["USB","U.S. Bancorp","Financials"],["UBER","Uber","Industrials"],["UDR","UDR, Inc.","Real Estate"],["ULTA","Ulta Beauty","Consumer Discretionary"],["UNP","Union Pacific Corporation","Industrials"],["UAL","United Airlines Holdings","Industrials"],["UPS","United Parcel Service","Industrials"],["URI","United Rentals","Industrials"],["UNH","UnitedHealth Group","Health Care"],["UHS","Universal Health Services","Health Care"],["VLO","Valero Energy","Energy"],["VEEV","Veeva Systems","Health Care"],["VTR","Ventas","Real Estate"],["VLTO","Veralto","Industrials"],["VRSN","Verisign","Information Technology"],["VRSK","Verisk Analytics","Industrials"],["VZ","Verizon","Communication Services"],["VRTX","Vertex Pharmaceuticals","Health Care"],["VRT","Vertiv","Industrials"],["VTRS","Viatris","Health Care"],["VICI","Vici Properties","Real Estate"],["V","Visa Inc.","Financials"],["VST","Vistra Corp.","Utilities"],["VMRK","Vivmark Residential","Real Estate"],["VMC","Vulcan Materials Company","Materials"],["VYLR","Vylor","Consumer Staples"],["WRB","W. R. Berkley Corporation","Financials"],["GWW","W. W. Grainger","Industrials"],["WAB","Wabtec","Industrials"],["WMT","Walmart","Consumer Staples"],["DIS","Walt Disney Company (The)","Communication Services"],["WM","Waste Management","Industrials"],["WAT","Waters Corporation","Health Care"],["WEC","WEC Energy Group","Utilities"],["WFC","Wells Fargo","Financials"],["WELL","Welltower","Real Estate"],["WST","West Pharmaceutical Services","Health Care"],["WDC","Western Digital","Information Technology"],["WY","Weyerhaeuser","Real Estate"],["WSM","Williams-Sonoma, Inc.","Consumer Discretionary"],["WMB","Williams Companies","Energy"],["WTW","Willis Towers Watson","Financials"],["WDAY","Workday, Inc.","Information Technology"],["WYNN","Wynn Resorts","Consumer Discretionary"],["XEL","Xcel Energy","Utilities"],["XYL","Xylem Inc.","Industrials"],["YUM","Yum! Brands","Consumer Discretionary"],["ZBRA","Zebra Technologies","Information Technology"],["ZBH","Zimmer Biomet","Health Care"],["ZTS","Zoetis","Health Care"]];
+const META = Object.fromEntries(UNIVERSE.map(([s,n,sec])=>[s,{name:n,sector:sec}]));
+const SYMS = UNIVERSE.map(u=>u[0]);
+const INDEXES = [["SPY","S&P 500 · SPY"],["QQQ","Nasdaq 100 · QQQ"],["IWM","Russell 2000 · IWM"]];
+const N = 10;
+const BASE = "https://finnhub.io/api/v1";
+const KEY_STORE = "finnhub:key";
+let API_KEY = (()=>{ try{ return localStorage.getItem(KEY_STORE)||""; }catch{ return ""; } })();
+
+// ---------- storage (best effort) ----------
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem("mv:"+k); return v?JSON.parse(v):d; }catch{ return d; } },
+  set(k,v){ try{ localStorage.setItem("mv:"+k, JSON.stringify(v)); }catch{} }
+};
+const today = () => new Date().toLocaleDateString("en-CA",{timeZone:"America/New_York"});
+
+// ---------- state ----------
+let day = today();
+let Q = store.get("q:"+day, {});          // symbol -> {c,d,dp,h,l,o,pc,at}
+let ticks = store.get("ticks:"+day, {});  // symbol -> [[t,p]]
+const logos = store.get("logos", {});     // symbol -> logo url ("" if none)
+const lastTry = {};                       // symbol -> ms of last scan attempt
+for(const s in Q) lastTry[s] = Q[s].at || 0;
+const live = new Set();                   // symbols subscribed on the WebSocket
+const inflight = new Set();
+const flashes = {};
+const extra = {};                         // symbol -> {metric, news}
+let selected = null, marketOpen = null;
+
+// ---------- rate-limited fetch (free tier: 60/min) ----------
+const calls=[], queue=[];
+function api(path, prio=false){
+  return new Promise((res,rej)=>{ (prio?queue.unshift.bind(queue):queue.push.bind(queue))({path,res,rej,tries:0}); });
+}
+setInterval(async ()=>{
+  const now=Date.now(); while(calls.length && now-calls[0]>60000) calls.shift();
+  if(!queue.length || calls.length>=55) return;
+  const job=queue.shift(); calls.push(now);
+  try{
+    const r=await fetch(`${BASE}/${job.path}${job.path.includes("?")?"&":"?"}token=${API_KEY}`);
+    if(r.status===429){ if(job.tries++<3) setTimeout(()=>queue.unshift(job),5000); else job.rej(new Error("rate")); return; }
+    if(r.status===401||r.status===403){ badKey(); return job.rej(new Error("auth")); }
+    if(!r.ok) return job.rej(new Error(r.status));
+    job.res(await r.json());
+  }catch(e){ job.rej(e); }
+},120);
+
+// ---------- loaders ----------
+async function loadQuote(s, prio){
+  lastTry[s]=Date.now();
+  try{
+    const q=await api(`quote?symbol=${encodeURIComponent(s)}`, prio);
+    if(!q || (q.c===0 && q.pc===0)) return false;
+    const old=Q[s];
+    if(old && live.has(s)){ q.h=Math.max(q.h,old.h||0); q.l=Math.min(q.l||Infinity,old.l||Infinity); q.c=old.c; q.d=q.c-q.pc; q.dp=q.pc?q.d/q.pc*100:0; }
+    Q[s]={c:q.c,d:q.d,dp:q.dp,h:q.h,l:q.l,o:q.o,pc:q.pc,at:Date.now()};
+    addTick(s,Date.now(),q.c); schedule(); return true;
+  }catch{ return false; }
+}
+async function loadStatus(){
+  try{
+    const m=await api("stock/market-status?exchange=US",true);
+    marketOpen=!!m.isOpen;
+    const el=document.getElementById("mkt"), label={regular:"Market open","pre-market":"Pre-market","post-market":"After hours"}[m.session]||(m.holiday?`Closed · ${m.holiday}`:"Market closed");
+    el.className="pill"+(m.isOpen?" open":""); el.lastElementChild.textContent=label; schedule();
+  }catch{}
+}
+async function loadLogo(s){
+  if(s in logos) return; logos[s]="";
+  try{ const p=await api(`stock/profile2?symbol=${encodeURIComponent(s)}`); logos[s]=p?.logo||""; store.set("logos",logos); schedule(); }catch{}
+}
+async function loadExtra(s){
+  const x=(extra[s] ||= {}), cached=store.get("meta:"+s,null);
+  if(cached && Date.now()-cached.t<20*3600e3) x.metric=cached.metric;
+  else{ try{ const m=await api(`stock/metric?symbol=${encodeURIComponent(s)}&metric=all`,true); x.metric=m?.metric||{}; store.set("meta:"+s,{t:Date.now(),metric:x.metric}); }catch{ x.metric={}; } }
+  if(selected===s) renderDrawer();
+  const to=today(), from=new Date(Date.now()-7*864e5).toISOString().slice(0,10);
+  try{ const n=await api(`company-news?symbol=${encodeURIComponent(s)}&from=${from}&to=${to}`,true); x.news=(n||[]).slice(0,8); }catch{ x.news=[]; }
+  if(selected===s) renderDrawer();
+}
+
+// ---------- rolling scan of the whole index ----------
+function nextToScan(){
+  let best=null, bt=Infinity;
+  for(const s of SYMS){ if(live.has(s)||inflight.has(s)) continue; const t=lastTry[s]||0; if(t<bt){ bt=t; best=s; } }
+  return best;
+}
+function scanTick(){
+  if(queue.length>2) return;            // leave room for clicks / logos / index refreshes
+  const s=nextToScan(); if(!s) return;
+  inflight.add(s); loadQuote(s).finally(()=>inflight.delete(s));
+}
+
+// ---------- intraday ticks (1 point / minute, persisted per day) ----------
+function addTick(s,t,p){
+  const a=(ticks[s] ||= []), m=Math.floor(t/60000);
+  if(a.length && Math.floor(a[a.length-1][0]/60000)===m) a[a.length-1]=[t,p]; else a.push([t,p]);
+  if(a.length>400) a.splice(0,a.length-400);
+}
+function persist(){ store.set("q:"+day,Q); store.set("ticks:"+day,ticks); }
+
+// ---------- websocket: stream the current movers ----------
+let ws, wsRetry=1000;
+function connect(){
+  const feed=document.getElementById("feed");
+  ws=new WebSocket(`wss://ws.finnhub.io?token=${API_KEY}`);
+  ws.onopen=()=>{ wsRetry=1000; feed.className="pill live"; feed.lastElementChild.textContent="Live"; live.clear(); syncSubs(); };
+  ws.onmessage=ev=>{
+    const msg=JSON.parse(ev.data); if(msg.type!=="trade") return;
+    for(const tr of msg.data){
+      const q=Q[tr.s]; if(!q) continue;
+      const prev=q.c; q.c=tr.p; q.d=tr.p-q.pc; q.dp=q.pc?q.d/q.pc*100:0; q.at=Date.now();
+      if(tr.p>q.h) q.h=tr.p; if(q.l && tr.p<q.l) q.l=tr.p;
+      if(tr.p!==prev) flashes[tr.s]=tr.p>prev?"fu":"fd";
+      addTick(tr.s,tr.t,tr.p);
+    }
+    schedule();
+  };
+  ws.onclose=()=>{ live.clear(); feed.className="pill"; feed.lastElementChild.textContent="Reconnecting…"; setTimeout(connect,wsRetry); wsRetry=Math.min(wsRetry*2,30000); };
+  ws.onerror=()=>ws.close();
+}
+function syncSubs(){
+  if(!ws||ws.readyState!==1) return;
+  const {g,l}=ranked(), want=new Set([...INDEXES.map(i=>i[0]),...g,...l]);
+  for(const s of [...live]) if(!want.has(s)){ ws.send(JSON.stringify({type:"unsubscribe",symbol:s})); live.delete(s); }
+  for(const s of want) if(!live.has(s)){ ws.send(JSON.stringify({type:"subscribe",symbol:s})); live.add(s); }
+}
+
+// ---------- ranking ----------
+function ranked(){
+  const arr=SYMS.filter(s=>Q[s]&&Q[s].pc>0&&Q[s].dp!=null).sort((a,b)=>Q[b].dp-Q[a].dp);
+  const g=arr.slice(0,N), l=arr.slice(Math.max(g.length,arr.length-N)).reverse();
+  return {arr,g,l};
+}
+
+// ---------- formatting ----------
+const fx=(n,d=2)=>n==null||isNaN(n)?"—":Number(n).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const fpct=n=>n==null||isNaN(n)?"—":(n>0?"+":"")+fx(n)+"%";
+const cls=n=>n==null||isNaN(n)||Math.abs(n)<0.005?"flat":n>0?"up":"down";
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const fcap=m=>m==null?"—":m>=1e6?"$"+fx(m/1e6,2)+"T":m>=1e3?"$"+fx(m/1e3,1)+"B":"$"+fx(m,0)+"M";
+const ago=t=>{ const m=Math.round((Date.now()-t)/60000); return m<1?"just now":m<60?m+"m ago":Math.round(m/60)+"h ago"; };
+function heatBg(dp,max=1){
+  if(dp==null||isNaN(dp)) return "var(--tile)";
+  const k=Math.min(Math.abs(dp)/4,1)*100*max;
+  return `color-mix(in srgb, ${dp>=0?"var(--up)":"var(--down)"} ${k.toFixed(0)}%, var(--tile))`;
+}
+function spark(s,w=92,h=30,axis=false){
+  const q=Q[s], a=ticks[s]||[], pc=q?.pc;
+  if(a.length<2||!pc) return `<svg width="${w}" height="${h}"><line x1="0" x2="${w}" y1="${h/2}" y2="${h/2}" stroke="var(--line)" stroke-dasharray="2 3"/></svg>`;
+  const ps=a.map(x=>x[1]), lo=Math.min(pc,...ps), hi=Math.max(pc,...ps), r=hi-lo||1;
+  const t0=a[0][0], t1=a[a.length-1][0]||t0+1, pad=axis?14:2;
+  const X=t=>(t-t0)/((t1-t0)||1)*(w-2)+1, Y=p=>pad+(1-(p-lo)/r)*(h-pad*2);
+  const col=ps[ps.length-1]>=pc?"var(--up)":"var(--down)";
+  const pts=a.map(x=>`${X(x[0]).toFixed(1)},${Y(x[1]).toFixed(1)}`).join(" ");
+  let lab="";
+  if(axis){
+    const tm=t=>new Date(t).toLocaleTimeString("en-US",{hour:"numeric",minute:"2-digit"});
+    lab=`<text x="2" y="10" font-size="10" fill="var(--muted)">${fx(hi)}</text><text x="2" y="${h-2}" font-size="10" fill="var(--muted)">${fx(lo)}</text>
+      <text x="${w-2}" y="${h-2}" font-size="10" fill="var(--muted)" text-anchor="end">${tm(t0)} – ${tm(t1)}</text>
+      <text x="${w-2}" y="${Y(pc)-3}" font-size="10" fill="var(--muted)" text-anchor="end">prev close</text>`;
+  }
+  return `<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}"><line x1="0" x2="${w}" y1="${Y(pc)}" y2="${Y(pc)}" stroke="var(--muted)" stroke-dasharray="2 3" stroke-width="1"/>
+    <polyline points="${pts}" fill="none" stroke="${col}" stroke-width="${axis?2:1.5}" stroke-linejoin="round"/>${lab}</svg>`;
+}
+function rangeBar(lo,hi,v){
+  if(!(hi>lo)||v==null) return "—";
+  const p=Math.max(0,Math.min(100,(v-lo)/(hi-lo)*100));
+  return `<span class="range" title="${fx(lo)} – ${fx(hi)}"><i style="left:calc(${p}% - 1.5px)"></i></span>`;
+}
+
+// ---------- render ----------
+function row(s,i){
+  const q=Q[s], m=META[s]||{}, logo=logos[s];
+  return `<tr data-s="${esc(s)}" class="${selected===s?"sel":""}">
+    <td class="rk num">${i+1}</td>
+    <td><div class="tk">${logo?`<img src="${esc(logo)}" alt="" loading="lazy">`:`<span class="ph"></span>`}<div><b>${esc(s)}</b><small>${esc(m.name)} · ${esc(m.sector)}</small></div></div></td>
+    <td class="num px ${flashes[s]||""}">${fx(q.c)}</td>
+    <td class="num ${cls(q.d)}">${(q.d>0?"+":"")+fx(q.d)}</td>
+    <td class="num"><span class="chgbox ${cls(q.dp)}" style="background:${heatBg(q.dp,.55)}">${fpct(q.dp)}</span></td>
+    <td>${spark(s)}</td>
+    <td>${rangeBar(q.l,q.h,q.c)}</td>
+    <td>${live.has(s)?'<span class="age live">● Live</span>':`<span class="age">${ago(q.at)}</span>`}</td></tr>`;
+}
+function renderBoards(g,l,n){
+  const empty=`<tr class="empty"><td colspan="8">${n?"Ranking…":"Scanning the S&amp;P 500…"}</td></tr>`;
+  document.getElementById("gBody").innerHTML=g.length?g.map(row).join(""):empty;
+  document.getElementById("lBody").innerHTML=l.length?l.map(row).join(""):empty;
+  [...g,...l].forEach(s=>{ if(!(s in logos)) loadLogo(s); });
+}
+function renderStrip(arr){
+  const idx=INDEXES.map(([s,l])=>{const q=Q[s];return `<div class="kpi"><div class="l">${l}</div><div class="v num">${fx(q?.c)}</div><div class="s num ${cls(q?.dp)}">${q?(q.d>0?"+":"")+fx(q.d)+" ("+fpct(q.dp)+")":"—"}</div></div>`;}).join("");
+  const up=arr.filter(s=>Q[s].dp>0).length, dn=arr.filter(s=>Q[s].dp<0).length;
+  const avg=arr.length?arr.reduce((t,s)=>t+Q[s].dp,0)/arr.length:null;
+  const done=SYMS.filter(s=>Q[s]||lastTry[s]).length, pct=done/SYMS.length*100;
+  const oldest=done===SYMS.length?Math.min(...SYMS.filter(s=>Q[s]).map(s=>Q[s].at)):null;
+  document.getElementById("strip").innerHTML=idx+
+    `<div class="kpi"><div class="l">Breadth (equal weight)</div><div class="v num ${cls(avg)}">${fpct(avg)}</div><div class="s"><span class="up">${up} up</span> · <span class="down">${dn} down</span></div></div>`+
+    `<div class="kpi"><div class="l">${done<SYMS.length?"First scan of the day":"Rolling re-scan"}</div><div class="v num">${done} / ${SYMS.length}</div>`+
+    `<div class="prog"><i style="width:${pct.toFixed(1)}%"></i></div><div class="s note">${oldest?`Oldest quote ${ago(oldest)}`:`About ${Math.max(1,Math.ceil((SYMS.length-done)/55))} min to go; leaders fill in as it runs`}</div></div>`;
+}
+function renderSectors(arr){
+  const g={};
+  for(const s of arr){ const k=META[s].sector; (g[k] ||= []).push(Q[s].dp); }
+  const list=Object.entries(g).map(([k,v])=>[k,v.reduce((a,b)=>a+b,0)/v.length,v.filter(x=>x>0).length,v.length]).sort((a,b)=>b[1]-a[1]);
+  document.getElementById("sectors").innerHTML=list.map(([k,avg,up,n])=>
+    `<div class="sec" style="background:${heatBg(avg,.6)}"><b title="${esc(k)}">${esc(k)}</b><span class="num ${cls(avg)}">${fpct(avg)}</span><small class="num">${up} of ${n} up</small></div>`).join("");
+}
+function renderDrawer(){
+  const s=selected; if(!s) return; const q=Q[s]||{}, m=extra[s]?.metric, meta=META[s]||{}, news=extra[s]?.news;
+  const M=m||{};
+  document.getElementById("drawer").innerHTML=`
+    <button class="btn x" id="dclose">Close</button>
+    <h2>${esc(s)}</h2><div class="note">${esc(meta.name)} · ${esc(meta.sector)}</div>
+    <div style="margin-top:10px"><span class="big num">${fx(q.c)}</span> <span class="num ${cls(q.dp)}" style="font-weight:600">${q.c!=null?(q.d>0?"+":"")+fx(q.d)+" ("+fpct(q.dp)+")":""}</span></div>
+    <div class="note">${live.has(s)?"Streaming live":"Quote from "+ago(q.at||Date.now())}</div>
+    <h4>Today</h4>${spark(s,400,150,true)}
+    <div class="stats num">
+      <div><span>Open</span><span>${fx(q.o)}</span></div><div><span>Prev close</span><span>${fx(q.pc)}</span></div>
+      <div><span>Day low</span><span>${fx(q.l)}</span></div><div><span>Day high</span><span>${fx(q.h)}</span></div>
+      ${m?`<div><span>52w low</span><span>${fx(M["52WeekLow"])}</span></div><div><span>52w high</span><span>${fx(M["52WeekHigh"])}</span></div>
+      <div><span>5D</span><span class="${cls(M["5DayPriceReturnDaily"])}">${fpct(M["5DayPriceReturnDaily"])}</span></div><div><span>3M</span><span class="${cls(M["13WeekPriceReturnDaily"])}">${fpct(M["13WeekPriceReturnDaily"])}</span></div>
+      <div><span>YTD</span><span class="${cls(M.yearToDatePriceReturnDaily)}">${fpct(M.yearToDatePriceReturnDaily)}</span></div><div><span>1Y</span><span class="${cls(M["52WeekPriceReturnDaily"])}">${fpct(M["52WeekPriceReturnDaily"])}</span></div>
+      <div><span>Mkt cap</span><span>${fcap(M.marketCapitalization)}</span></div><div><span>P/E (TTM)</span><span>${M.peTTM>0?fx(M.peTTM,1):"—"}</span></div>
+      <div><span>Fwd P/E</span><span>${M.forwardPE>0?fx(M.forwardPE,1):"—"}</span></div><div><span>Beta</span><span>${fx(M.beta)}</span></div>`:`<div><span>Fundamentals</span><span>Loading…</span></div>`}
+    </div>
+    <h4>News (7 days)</h4>
+    <div class="news">${news?(news.length?news.map(n=>`<a href="${esc(n.url)}" target="_blank" rel="noopener"><b>${esc(n.headline)}</b><small>${esc(n.source)} · ${new Date(n.datetime*1000).toLocaleString("en-US",{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}</small></a>`).join(""):'<p class="note">No headlines this week.</p>'):'<p class="note">Loading…</p>'}</div>`;
+  document.getElementById("dclose").onclick=closeDrawer;
+}
+function openDrawer(s){ selected=s; document.getElementById("drawer").classList.add("open"); renderDrawer(); render(); loadExtra(s); }
+function closeDrawer(){ document.getElementById("drawer").classList.remove("open"); selected=null; render(); }
+
+let pending=false, lastDrawer=0, lastSync=0;
+function schedule(){ if(!pending){ pending=true; requestAnimationFrame(()=>{ pending=false; render(); }); } }
+function render(){
+  const {arr,g,l}=ranked();
+  renderBoards(g,l,arr.length); renderStrip(arr); renderSectors(arr);
+  for(const k in flashes) delete flashes[k];
+  if(Date.now()-lastSync>3000){ lastSync=Date.now(); syncSubs(); }
+  if(selected && Date.now()-lastDrawer>2000){ lastDrawer=Date.now(); renderDrawer(); }
+  document.getElementById("upd").textContent="Updated "+new Date().toLocaleTimeString()+(marketOpen===false?" · market closed, showing the latest session's moves":"");
+}
+
+// ---------- events ----------
+for(const id of ["gBody","lBody"]) document.getElementById(id).onclick=e=>{ const tr=e.target.closest("tr[data-s]"); if(tr) openDrawer(tr.dataset.s); };
+document.getElementById("theme").onclick=()=>{ const r=document.documentElement, dark=r.dataset.theme?r.dataset.theme==="dark":matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme=dark?"light":"dark"; store.set("theme",r.dataset.theme); };
+addEventListener("keydown",e=>{ if(e.key==="Escape"&&selected) closeDrawer(); });
+document.getElementById("forget").onclick=()=>{ try{ localStorage.removeItem(KEY_STORE); }catch{} location.reload(); };
+
+function badKey(){
+  try{ localStorage.removeItem(KEY_STORE); sessionStorage.setItem("finnhub:bad","1"); }catch{}
+  location.reload();
+}
+function showGate(){
+  document.getElementById("keygate").hidden=false;
+  document.getElementById("main").hidden=true;
+  document.getElementById("feed").lastElementChild.textContent="No key";
+  try{ if(sessionStorage.getItem("finnhub:bad")){ document.getElementById("keyerr").hidden=false; sessionStorage.removeItem("finnhub:bad"); } }catch{}
+  document.getElementById("keyf").onsubmit=e=>{ e.preventDefault(); const k=document.getElementById("keyin").value.trim(); if(!k) return;
+    try{ localStorage.setItem(KEY_STORE,k); }catch{ API_KEY=k; document.getElementById("keygate").hidden=true; document.getElementById("main").hidden=false; boot(); return; }
+    location.reload(); };
+}
+
+// ---------- boot ----------
+function boot(){
+  document.getElementById("forget").hidden=false;
+  INDEXES.forEach(([s])=>loadQuote(s,true));
+  loadStatus(); connect(); render();
+  setInterval(scanTick,400);
+  setInterval(()=>INDEXES.forEach(([s])=>{ if(!live.has(s)) loadQuote(s); }),120000);
+  setInterval(loadStatus,300000);
+  setInterval(()=>{ persist(); if(today()!==day){ location.reload(); return; } render(); },15000);
+  addEventListener("beforeunload",persist);
+}
+(function(){ const th=store.get("theme",null); if(th) document.documentElement.dataset.theme=th; })();
+if(API_KEY) boot(); else showGate();
+</script>
+</body>
+</html>

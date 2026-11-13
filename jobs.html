@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NYC Buy-Side Jobs — Bennett Lee</title>
+  <meta name="description" content="Open investment management, equity research and hedge fund roles in New York, pulled from firms' career sites.">
+  <style>
+    :root {
+      --columbia: #B9D9EB; --columbia-soft: #E6F1F8; --navy: #1D4F91; --deep: #0C2340;
+      --bg: #F7FAFC; --card: #FFFFFF; --text: #1A2B3C; --muted: #55697D;
+      --radius: 14px; --shadow: 0 2px 10px rgba(12, 35, 64, 0.07);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg); color: var(--text); line-height: 1.6; }
+    a { color: var(--navy); }
+    a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible { outline: 3px solid var(--navy); outline-offset: 2px; }
+    nav { position: sticky; top: 0; z-index: 10; background: var(--deep); border-bottom: 3px solid var(--columbia); }
+    .nav-inner { max-width: 1040px; margin: 0 auto; padding: 0.85rem 1.5rem; display: flex; align-items: center;
+      justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .brand { color: #fff; font-weight: 700; text-decoration: none; letter-spacing: 0.02em; }
+    .brand span { color: var(--columbia); }
+    .nav-links { display: flex; gap: 1.4rem; list-style: none; flex-wrap: wrap; }
+    .nav-links a { color: #DCE9F3; text-decoration: none; font-size: 0.95rem; font-weight: 500;
+      padding-bottom: 2px; border-bottom: 2px solid transparent; }
+    .nav-links a:hover, .nav-links a.active { color: #fff; border-bottom-color: var(--columbia); }
+    .nav-links a.nav-cta { background: var(--columbia); color: var(--deep); font-weight: 700;
+      padding: 0.25rem 0.8rem; border-radius: 999px; border-bottom: none; }
+    .nav-links a.nav-cta:hover { background: #fff; }
+    header.hero { background: linear-gradient(135deg, var(--columbia) 0%, var(--columbia-soft) 100%); padding: 3rem 1.5rem 2.5rem; }
+    .hero-inner { max-width: 1040px; margin: 0 auto; }
+    .hero h1 { color: var(--deep); font-size: clamp(2rem, 5vw, 2.8rem); line-height: 1.15; }
+    .hero p { max-width: 680px; color: #23384D; margin-top: 0.6rem; }
+    .stats { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1.1rem; }
+    .stat { background: var(--card); border-radius: 999px; padding: 0.3rem 0.9rem; font-size: 0.9rem; box-shadow: var(--shadow); }
+    .stat b { color: var(--navy); }
+    main { max-width: 1040px; margin: 0 auto; padding: 1rem 1.5rem 3rem; }
+    section { padding-top: 2.5rem; }
+    .section-head { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 1rem; }
+    .section-head h2 { font-size: 1.5rem; color: var(--deep); }
+    .section-head .bar { flex: 1; height: 2px; background: var(--columbia); }
+    .card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 1.2rem 1.3rem; }
+    .filters { display: flex; flex-wrap: wrap; gap: 0.7rem; align-items: center; margin-bottom: 1rem; }
+    .filters input[type=search], .filters select { font: inherit; padding: 0.45rem 0.7rem; border: 1px solid var(--columbia);
+      border-radius: 8px; background: #fff; color: var(--text); min-width: 0; }
+    .filters input[type=search] { flex: 1 1 220px; }
+    .filters label.check { display: inline-flex; gap: 0.4rem; align-items: center; font-size: 0.95rem; }
+    .count { color: var(--muted); font-size: 0.9rem; margin-left: auto; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+    th { text-align: left; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted);
+      padding: 0.5rem 0.6rem; border-bottom: 2px solid var(--columbia); white-space: nowrap; }
+    td { padding: 0.6rem; border-bottom: 1px solid #E3EDF5; vertical-align: top; }
+    td a { font-weight: 600; text-decoration: none; }
+    td a:hover { text-decoration: underline; }
+    td.loc { color: var(--muted); font-size: 0.88rem; min-width: 140px; }
+    td.num { white-space: nowrap; font-variant-numeric: tabular-nums; color: var(--muted); }
+    .tag { background: var(--columbia-soft); border: 1px solid var(--columbia); color: var(--deep); border-radius: 999px;
+      padding: 0.1rem 0.55rem; font-size: 0.8rem; white-space: nowrap; }
+    .new { background: var(--navy); color: #fff; border-radius: 999px; padding: 0.05rem 0.45rem; font-size: 0.72rem;
+      font-weight: 700; margin-left: 0.3rem; vertical-align: middle; }
+    .note, .muted { color: var(--muted); font-size: 0.92rem; }
+    .note { margin-bottom: 0.8rem; }
+    ul.plain { list-style: none; display: grid; gap: 0.4rem; }
+    .dir { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+    .dir-col h3 { font-size: 1rem; color: var(--deep); margin-bottom: 0.4rem; }
+    .dir-col ul { list-style: none; display: grid; gap: 0.25rem; font-size: 0.93rem; }
+    .dir-col a { text-decoration: none; }
+    .dir-col a:hover { text-decoration: underline; }
+    .live { font-size: 0.7rem; font-weight: 700; color: var(--navy); background: var(--columbia-soft);
+      border: 1px solid var(--columbia); border-radius: 999px; padding: 0 0.4rem; margin-left: 0.25rem; }
+    footer { background: var(--deep); color: #C9DAE8; text-align: center; padding: 2rem 1.5rem; font-size: 0.9rem; }
+    footer a { color: var(--columbia); }
+    @media (max-width: 860px) { .dir { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .dir { grid-template-columns: 1fr; } .count { margin-left: 0; } }
+  </style>
+</head>
+<body>
+  <nav aria-label="Main">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">Bennett <span>Lee</span></a>
+      <ul class="nav-links">
+        <li><a href="index.html#education">Education</a></li>
+        <li><a href="index.html#experience">Experience</a></li>
+        <li><a href="index.html#additional">Additional</a></li>
+        <li><a href="research.html">Research</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="movers.html">Movers</a></li>
+        <li><a class="active" href="jobs.html" aria-current="page">Jobs</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+        <li><a class="nav-cta" href="Lee_Bennett_Resume_2026.pdf" target="_blank" rel="noopener">Resume ↓</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>NYC Buy-Side &amp; Research Jobs</h1>
+      <p>Open investment management, equity research and hedge fund roles in New York, pulled from firms' own career sites. Updated Nov 12, 2026.</p>
+      <div class="stats">
+        <span class="stat"><b>40</b> open roles</span>
+        <span class="stat"><b>10</b> firms hiring</span>
+        <span class="stat"><b>23</b> career sites checked</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="roles" aria-labelledby="roles-h">
+      <div class="section-head"><h2 id="roles-h">Open roles</h2><span class="bar"></span></div>
+      <div class="card">
+        <div class="filters">
+          <label for="q" class="sr-only" hidden>Search</label>
+          <input id="q" type="search" placeholder="Search titles, e.g. healthcare, credit, associate" aria-label="Search role titles">
+          <select id="cat" aria-label="Role type"><option value="">All role types</option><option value="Credit research">Credit research</option>
+<option value="Equity research">Equity research</option>
+<option value="Hedge fund / L-S">Hedge fund / L-S</option>
+<option value="Portfolio management">Portfolio management</option>
+<option value="Asset management">Asset management</option></select>
+          <select id="firm" aria-label="Firm"><option value="">All firms</option><option value="Bank of America">Bank of America</option>
+<option value="Barclays">Barclays</option>
+<option value="BlackRock">BlackRock</option>
+<option value="Brown Brothers Harriman">Brown Brothers Harriman</option>
+<option value="Citi">Citi</option>
+<option value="Deutsche Bank">Deutsche Bank</option>
+<option value="Guggenheim">Guggenheim</option>
+<option value="JPMorgan Chase">JPMorgan Chase</option>
+<option value="Morgan Stanley">Morgan Stanley</option>
+<option value="Point72">Point72</option></select>
+          <label class="check"><input id="new" type="checkbox"> Posted this week</label>
+          <span class="count" id="count" aria-live="polite"></span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Role</th><th>Firm</th><th>Type</th><th>Location</th><th>Posted</th></tr></thead>
+            <tbody id="rows">
+<tr data-firm="Barclays" data-cat="Credit research" data-new="1"><td><a href="https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/New-York-745-7th-Avenue/Senior-Analyst---Credit-Research_JR-0000137812" target="_blank" rel="noopener">Senior Analyst - Credit Research</a> <span class="new">New</span></td><td>Barclays</td><td><span class="tag">Credit research</span></td><td class="loc">New York, 745 7th Avenue</td><td class="num">Nov 12</td></tr>
+<tr data-firm="Brown Brothers Harriman" data-cat="Credit research" data-new="1"><td><a href="https://bbh.wd5.myworkdayjobs.com/en-US/BBH/job/New-York/Credit-Analyst_72322-1" target="_blank" rel="noopener">Credit Analyst</a> <span class="new">New</span></td><td>Brown Brothers Harriman</td><td><span class="tag">Credit research</span></td><td class="loc">New York</td><td class="num">Nov 11</td></tr>
+<tr data-firm="Bank of America" data-cat="Equity research" data-new="1"><td><a href="https://ghr.wd1.myworkdayjobs.com/en-US/Lateral-US/job/New-York/Associate-VP--Equity-Research---Semiconductors_26042108" target="_blank" rel="noopener">Associate/VP: Equity Research - Semiconductors</a> <span class="new">New</span></td><td>Bank of America</td><td><span class="tag">Equity research</span></td><td class="loc">New York</td><td class="num">Nov 11</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Equity research" data-new="1"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210805331" target="_blank" rel="noopener">Asset Management - Equity Research Analyst, Industrials  - Associate</a> <span class="new">New</span></td><td>JPMorgan Chase</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY, United States</td><td class="num">Nov 10</td></tr>
+<tr data-firm="Deutsche Bank" data-cat="Equity research" data-new="1"><td><a href="https://db.wd3.myworkdayjobs.com/en-US/DBWebSite/job/New-York-1-Columbus-Circle/Vice-President--US-Equity-Research_R0458390-1" target="_blank" rel="noopener">Vice President, US Equity Research</a> <span class="new">New</span></td><td>Deutsche Bank</td><td><span class="tag">Equity research</span></td><td class="loc">New York, 1 Columbus Circle</td><td class="num">Nov 10</td></tr>
+<tr data-firm="Point72" data-cat="Equity research" data-new="1"><td><a href="https://boards.greenhouse.io/point72/jobs/8885715002?gh_jid=8885715002" target="_blank" rel="noopener">2027 Summer Internship - Sector Analyst, Proprietary Research</a> <span class="new">New</span></td><td>Point72</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY</td><td class="num">Nov 09</td></tr>
+<tr data-firm="Point72" data-cat="Credit research" data-new="1"><td><a href="https://boards.greenhouse.io/point72/jobs/7605647002?gh_jid=7605647002" target="_blank" rel="noopener">Credit Research Analyst, Global Macro</a> <span class="new">New</span></td><td>Point72</td><td><span class="tag">Credit research</span></td><td class="loc">New York</td><td class="num">Nov 09</td></tr>
+<tr data-firm="Point72" data-cat="Hedge fund / L-S" data-new="1"><td><a href="https://boards.greenhouse.io/point72/jobs/8499113002?gh_jid=8499113002" target="_blank" rel="noopener">Point72 Academy 2026-2027 Investment Analyst Program for Experienced Professionals - US</a> <span class="new">New</span></td><td>Point72</td><td><span class="tag">Hedge fund / L-S</span></td><td class="loc">Chicago, Florida, New York, San Francisco</td><td class="num">Nov 09</td></tr>
+<tr data-firm="Point72" data-cat="Equity research" data-new="1"><td><a href="https://boards.greenhouse.io/point72/jobs/7820104002?gh_jid=7820104002" target="_blank" rel="noopener">Sector Analyst, MI-Data</a> <span class="new">New</span></td><td>Point72</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY</td><td class="num">Nov 09</td></tr>
+<tr data-firm="Point72" data-cat="Credit research" data-new="1"><td><a href="https://boards.greenhouse.io/point72/jobs/8790657002?gh_jid=8790657002" target="_blank" rel="noopener">Trader, High Yield/Distressed Credit Investment Team</a> <span class="new">New</span></td><td>Point72</td><td><span class="tag">Credit research</span></td><td class="loc">New York, NY</td><td class="num">Nov 09</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Equity research" data-new="1"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210806278" target="_blank" rel="noopener">Asset Management - Sustainable Investing Research Analyst- Vice President</a> <span class="new">New</span></td><td>JPMorgan Chase</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY, United States</td><td class="num">Nov 09</td></tr>
+<tr data-firm="Morgan Stanley" data-cat="Equity research" data-new="1"><td><a href="https://ms.wd5.myworkdayjobs.com/en-US/External/job/New-York-New-York-United-States-of-America/Equity-Research---Analyst-Associate--Utilities---Clean-Tech-Associate--New-York-_JR046350-1" target="_blank" rel="noopener">Equity Research – Analyst/Associate, Utilities &amp; Clean Tech Associate (New York)</a> <span class="new">New</span></td><td>Morgan Stanley</td><td><span class="tag">Equity research</span></td><td class="loc">New York, New York, United States of America</td><td class="num">Nov 06</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Portfolio management" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210806363" target="_blank" rel="noopener">Specialized Strategies Team, Portfolio Management and Research, Associate</a></td><td>JPMorgan Chase</td><td><span class="tag">Portfolio management</span></td><td class="loc">New York, NY, United States</td><td class="num">Nov 04</td></tr>
+<tr data-firm="Bank of America" data-cat="Equity research" data-new="0"><td><a href="https://ghr.wd1.myworkdayjobs.com/en-US/Lateral-US/job/New-York/Analyst--Associate--Equity-Research--Metals---Mining_26032227" target="_blank" rel="noopener">Analyst/ Associate: Equity Research, Metals &amp; Mining</a></td><td>Bank of America</td><td><span class="tag">Equity research</span></td><td class="loc">New York</td><td class="num">Nov 04</td></tr>
+<tr data-firm="BlackRock" data-cat="Asset management" data-new="0"><td><a href="https://blackrock.wd1.myworkdayjobs.com/en-US/BlackRock_Professional/job/New-York-NY/Associate--Investment-Management_R266814" target="_blank" rel="noopener">Associate, Investment Management</a></td><td>BlackRock</td><td><span class="tag">Asset management</span></td><td class="loc">New York, NY</td><td class="num">Oct 30</td></tr>
+<tr data-firm="Morgan Stanley" data-cat="Equity research" data-new="0"><td><a href="https://ms.wd5.myworkdayjobs.com/en-US/External/job/New-York-New-York-United-States-of-America/Equity-Research---Associate--Biopharma--New-York-_JR045717-1" target="_blank" rel="noopener">Equity Research – Associate, SMID Cap Biotech (New York)</a></td><td>Morgan Stanley</td><td><span class="tag">Equity research</span></td><td class="loc">New York, New York, United States of America</td><td class="num">Oct 28</td></tr>
+<tr data-firm="Citi" data-cat="Equity research" data-new="0"><td><a href="https://citi.wd5.myworkdayjobs.com/en-US/2/job/New-York-New-York-United-States/Equity-Research-Senior-Associate---FinTech_261006229" target="_blank" rel="noopener">Equity Research Senior Associate - FinTech</a></td><td>Citi</td><td><span class="tag">Equity research</span></td><td class="loc">New York New York United States</td><td class="num">Oct 28</td></tr>
+<tr data-firm="Barclays" data-cat="Equity research" data-new="0"><td><a href="https://barclays.wd3.myworkdayjobs.com/en-US/External_Career_Site_Barclays/job/New-York-745-7th-Avenue/Equity-Research-Aerospace---Defense-Defense-Tech--AVP_JR-0000101827-1" target="_blank" rel="noopener">Equity Research Aerospace &amp; Defense/Defense Tech, AVP</a></td><td>Barclays</td><td><span class="tag">Equity research</span></td><td class="loc">New York, 745 7th Avenue</td><td class="num">Oct 27</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Equity research" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210799640" target="_blank" rel="noopener">US Equity Research - Beverage, Household &amp; Personal Care Products - Associate</a></td><td>JPMorgan Chase</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY, United States</td><td class="num">Oct 26</td></tr>
+<tr data-firm="Brown Brothers Harriman" data-cat="Portfolio management" data-new="0"><td><a href="https://bbh.wd5.myworkdayjobs.com/en-US/BBH/job/New-York/Portfolio-Construction-Manager_71002" target="_blank" rel="noopener">Senior Portfolio Construction Analyst</a></td><td>Brown Brothers Harriman</td><td><span class="tag">Portfolio management</span></td><td class="loc">New York</td><td class="num">Oct 26</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Equity research" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210790993" target="_blank" rel="noopener">US Equity Research - SMid Biotech - Associate</a></td><td>JPMorgan Chase</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY, United States</td><td class="num">Oct 22</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Equity research" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210790999" target="_blank" rel="noopener">US Equity Research - SMid Biotech - Associate</a></td><td>JPMorgan Chase</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY, United States</td><td class="num">Oct 22</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Equity research" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210798422" target="_blank" rel="noopener">US Equity Research - Food Producers &amp; Retailers - Associate</a></td><td>JPMorgan Chase</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY, United States</td><td class="num">Oct 22</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Equity research" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210793027" target="_blank" rel="noopener">US Equity Research - Life Science Tools &amp; Diagnostics - Analyst</a></td><td>JPMorgan Chase</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY, United States</td><td class="num">Oct 22</td></tr>
+<tr data-firm="Deutsche Bank" data-cat="Equity research" data-new="0"><td><a href="https://db.wd3.myworkdayjobs.com/en-US/DBWebSite/job/New-York-1-Columbus-Circle/Research-Associate--Semiconductors---Semiconductor-Capital-Equipment_R0456403" target="_blank" rel="noopener">Research Associate, Semiconductors &amp; Semiconductor Capital Equipment</a></td><td>Deutsche Bank</td><td><span class="tag">Equity research</span></td><td class="loc">New York, 1 Columbus Circle</td><td class="num">Oct 21</td></tr>
+<tr data-firm="BlackRock" data-cat="Equity research" data-new="0"><td><a href="https://blackrock.wd1.myworkdayjobs.com/en-US/BlackRock_Professional/job/New-York-NY/Director--Global-Equity-Manager-Research---Investment-Leadership--Multi-Asset-Strategies---Solutions--MASS-_R266947" target="_blank" rel="noopener">Director, Global Equity Manager Research – Investment Leadership, Multi-Asset Strategies &amp; Solutions (MASS)</a></td><td>BlackRock</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY</td><td class="num">Oct 21</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Equity research" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210790156" target="_blank" rel="noopener">US Equity Research - SMid Biotech - Associate</a></td><td>JPMorgan Chase</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY, United States</td><td class="num">Oct 19</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Equity research" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210790087" target="_blank" rel="noopener">US Equity Research - Metals &amp; Mining - Associate</a></td><td>JPMorgan Chase</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY, United States</td><td class="num">Oct 19</td></tr>
+<tr data-firm="Morgan Stanley" data-cat="Equity research" data-new="0"><td><a href="https://ms.wd5.myworkdayjobs.com/en-US/External/job/New-York-New-York-United-States-of-America/Equity-Research---Analyst-Associate--Airlines---Freight-Transportation--New-York-_JR045525-1" target="_blank" rel="noopener">Equity Research – Analyst/Associate, Airlines &amp; Freight Transportation (New York)</a></td><td>Morgan Stanley</td><td><span class="tag">Equity research</span></td><td class="loc">New York, New York, United States of America</td><td class="num">Oct 14</td></tr>
+<tr data-firm="Guggenheim" data-cat="Equity research" data-new="0"><td><a href="https://guggenheim.wd1.myworkdayjobs.com/en-US/Guggenheim_Careers/job/New-York/Equity-Research-Associate-Vice-President---Consumer---Retail_14789" target="_blank" rel="noopener">Equity Research Associate/Vice President – Consumer &amp; Retail</a></td><td>Guggenheim</td><td><span class="tag">Equity research</span></td><td class="loc">New York</td><td class="num">Oct 13</td></tr>
+<tr data-firm="Deutsche Bank" data-cat="Credit research" data-new="0"><td><a href="https://db.wd3.myworkdayjobs.com/en-US/DBWebSite/job/New-York-1-Columbus-Circle/US-High-Yield-Consumer-Analyst_R0447164" target="_blank" rel="noopener">US High Yield Consumer Analyst</a></td><td>Deutsche Bank</td><td><span class="tag">Credit research</span></td><td class="loc">New York, 1 Columbus Circle</td><td class="num">Oct 13</td></tr>
+<tr data-firm="Deutsche Bank" data-cat="Portfolio management" data-new="0"><td><a href="https://db.wd3.myworkdayjobs.com/en-US/DBWebSite/job/New-York-875-Third-Avenue/Portfolio-Manager--Equity_R0452178" target="_blank" rel="noopener">Portfolio Manager, Equity</a></td><td>Deutsche Bank</td><td><span class="tag">Portfolio management</span></td><td class="loc">New York, 875 Third Avenue</td><td class="num">Oct 13</td></tr>
+<tr data-firm="Bank of America" data-cat="Equity research" data-new="0"><td><a href="https://ghr.wd1.myworkdayjobs.com/en-US/Lateral-US/job/New-York/ANA-ASO--Equity-Research---Aerospace-and-Defense-Electronics_26036922" target="_blank" rel="noopener">Analst/Associate: Equity Research - Aerospace and Defense Electronics</a></td><td>Bank of America</td><td><span class="tag">Equity research</span></td><td class="loc">New York</td><td class="num">Oct 13</td></tr>
+<tr data-firm="Bank of America" data-cat="Equity research" data-new="0"><td><a href="https://ghr.wd1.myworkdayjobs.com/en-US/Lateral-US/job/New-York/Equity-Research-Analyst-Associate--Payments--Processors---IT-Services_26020311" target="_blank" rel="noopener">Equity Research Analyst/Associate - Consumer Finance</a></td><td>Bank of America</td><td><span class="tag">Equity research</span></td><td class="loc">New York</td><td class="num">Oct 13</td></tr>
+<tr data-firm="Bank of America" data-cat="Equity research" data-new="0"><td><a href="https://ghr.wd1.myworkdayjobs.com/en-US/Lateral-US/job/New-York/Analyst--Associate--Equity-Research--Gaming---Lodging_26033603" target="_blank" rel="noopener">Analyst/ Associate: Equity Research, Gaming &amp; Lodging</a></td><td>Bank of America</td><td><span class="tag">Equity research</span></td><td class="loc">New York</td><td class="num">Oct 13</td></tr>
+<tr data-firm="Bank of America" data-cat="Equity research" data-new="0"><td><a href="https://ghr.wd1.myworkdayjobs.com/en-US/Lateral-US/job/New-York/Associate---Equity-Research--SMid-Biotech_25044049" target="_blank" rel="noopener">Associate - Equity Research, SMid/ Large Cap Biotech</a></td><td>Bank of America</td><td><span class="tag">Equity research</span></td><td class="loc">New York</td><td class="num">Oct 13</td></tr>
+<tr data-firm="Bank of America" data-cat="Equity research" data-new="0"><td><a href="https://ghr.wd1.myworkdayjobs.com/en-US/Lateral-US/job/New-York/Analyst--Associate---Equity-Research--US-Biopharma--Large-Cap---Mid-Cap-_26014984" target="_blank" rel="noopener">Analyst/ Associate - Equity Research, US Biopharma (Large-Cap &amp; Mid-Cap)</a></td><td>Bank of America</td><td><span class="tag">Equity research</span></td><td class="loc">New York</td><td class="num">Oct 13</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Asset management" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210791822" target="_blank" rel="noopener">US Fixed Income &amp; Multi-Asset Manager Research, VP</a></td><td>JPMorgan Chase</td><td><span class="tag">Asset management</span></td><td class="loc">New York, NY, United States</td><td class="num">Sep 16</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Portfolio management" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210788979" target="_blank" rel="noopener">Fiduciary Investment Solutions – Portfolio Manager, Executive Director</a></td><td>JPMorgan Chase</td><td><span class="tag">Portfolio management</span></td><td class="loc">New York, NY, United States</td><td class="num">Sep 16</td></tr>
+<tr data-firm="JPMorgan Chase" data-cat="Equity research" data-new="0"><td><a href="https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/210781026" target="_blank" rel="noopener">US Equity Research - Retailing - Broadlines / Specialty - Associate</a></td><td>JPMorgan Chase</td><td><span class="tag">Equity research</span></td><td class="loc">New York, NY, United States</td><td class="num">Aug 25</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <p class="note" style="margin-top:0.8rem">Roles are matched on job title, so a few may be off-target. Dates are when the firm posted or last updated the role.</p>
+    </section>
+
+    <section id="linkedin" aria-labelledby="li-h">
+      <div class="section-head"><h2 id="li-h">LinkedIn</h2><span class="bar"></span></div>
+      <div class="card">
+        <p class="note">LinkedIn doesn't allow automated collection, so these open live searches on LinkedIn instead.</p>
+        <ul class="plain"><li><a href="https://www.linkedin.com/jobs/search/?keywords=equity+research+analyst&location=New+York%2C+New+York%2C+United+States&f_TPR=r604800" target="_blank" rel="noopener">Equity research</a> <span class="muted">· New York · past week</span></li>
+<li><a href="https://www.linkedin.com/jobs/search/?keywords=investment+analyst+hedge+fund&location=New+York%2C+New+York%2C+United+States&f_TPR=r604800" target="_blank" rel="noopener">Investment analyst (buy side)</a> <span class="muted">· New York · past week</span></li>
+<li><a href="https://www.linkedin.com/jobs/search/?keywords=long+short+equity+analyst&location=New+York%2C+New+York%2C+United+States&f_TPR=r604800" target="_blank" rel="noopener">Long/short equity</a> <span class="muted">· New York · past week</span></li>
+<li><a href="https://www.linkedin.com/jobs/search/?keywords=asset+management+investment+associate&location=New+York%2C+New+York%2C+United+States&f_TPR=r604800" target="_blank" rel="noopener">Asset management</a> <span class="muted">· New York · past week</span></li>
+<li><a href="https://www.linkedin.com/jobs/search/?keywords=portfolio+manager+associate&location=New+York%2C+New+York%2C+United+States&f_TPR=r604800" target="_blank" rel="noopener">Portfolio management</a> <span class="muted">· New York · past week</span></li></ul>
+        <div style="margin-top:1.2rem"><p class="note">No saved LinkedIn results yet. Use the searches above to open live results on LinkedIn.</p></div>
+      </div>
+    </section>
+
+    <section id="firms" aria-labelledby="firms-h">
+      <div class="section-head"><h2 id="firms-h">Firm directory</h2><span class="bar"></span></div>
+      <p class="note">Career pages for firms with a New York presence. Firms marked <span class="live">live</span> are checked automatically for the list above. The rest, including Goldman Sachs, Citadel and D.E. Shaw, don't offer a public feed, so check them directly.</p>
+      <div class="card dir">
+<div class="dir-col"><h3>Banks</h3><ul><li><a href="https://higher.gs.com/" target="_blank" rel="noopener">Goldman Sachs</a></li>
+<li><a href="https://careers.jpmorgan.com/" target="_blank" rel="noopener">JPMorgan Chase</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.morganstanley.com/careers" target="_blank" rel="noopener">Morgan Stanley</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://jobs.citi.com/" target="_blank" rel="noopener">Citi</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://careers.bankofamerica.com/" target="_blank" rel="noopener">Bank of America</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://search.jobs.barclays/" target="_blank" rel="noopener">Barclays</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://careers.db.com/" target="_blank" rel="noopener">Deutsche Bank</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.ubs.com/global/en/careers.html" target="_blank" rel="noopener">UBS</a></li>
+<li><a href="https://www.wellsfargojobs.com/" target="_blank" rel="noopener">Wells Fargo</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.jefferies.com/careers/" target="_blank" rel="noopener">Jefferies</a></li>
+<li><a href="https://www.evercore.com/careers/" target="_blank" rel="noopener">Evercore</a></li>
+<li><a href="https://www.lazard.com/careers/" target="_blank" rel="noopener">Lazard</a></li>
+<li><a href="https://www.moelis.com/careers/" target="_blank" rel="noopener">Moelis</a></li>
+<li><a href="https://pjtpartners.com/careers" target="_blank" rel="noopener">PJT Partners</a></li>
+<li><a href="https://www.centerviewpartners.com/" target="_blank" rel="noopener">Centerview Partners</a></li>
+<li><a href="https://hl.com/careers/" target="_blank" rel="noopener">Houlihan Lokey</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.guggenheimpartners.com/careers" target="_blank" rel="noopener">Guggenheim</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.mizuhoamericas.com/careers" target="_blank" rel="noopener">Mizuho</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.nomura.com/americas/careers/" target="_blank" rel="noopener">Nomura</a></li>
+<li><a href="https://jobs.rbc.com/" target="_blank" rel="noopener">RBC Capital Markets</a></li>
+<li><a href="https://group.bnpparibas/en/careers" target="_blank" rel="noopener">BNP Paribas</a></li>
+<li><a href="https://www.pipersandler.com/careers" target="_blank" rel="noopener">Piper Sandler</a></li>
+<li><a href="https://www.williamblair.com/careers" target="_blank" rel="noopener">William Blair</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.wolferesearch.com/" target="_blank" rel="noopener">Wolfe Research</a></li></ul></div>
+<div class="dir-col"><h3>Asset managers</h3><ul><li><a href="https://careers.blackrock.com/" target="_blank" rel="noopener">BlackRock</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://jobs.fidelity.com/" target="_blank" rel="noopener">Fidelity</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.wellington.com/en/careers" target="_blank" rel="noopener">Wellington</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.alliancebernstein.com/corporate/en/careers.html" target="_blank" rel="noopener">AllianceBernstein</a></li>
+<li><a href="https://www.nb.com/en/global/careers" target="_blank" rel="noopener">Neuberger Berman</a></li>
+<li><a href="https://www.invesco.com/corporate/en/careers.html" target="_blank" rel="noopener">Invesco</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://pimco.wd1.myworkdayjobs.com/pimco-careers" target="_blank" rel="noopener">PIMCO</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.pgim.com/careers" target="_blank" rel="noopener">PGIM</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.nuveen.com/en-us/about-us/careers" target="_blank" rel="noopener">Nuveen</a></li>
+<li><a href="https://www.bny.com/corporate/global/en/careers.html" target="_blank" rel="noopener">BNY</a></li>
+<li><a href="https://careers.statestreet.com/" target="_blank" rel="noopener">State Street</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.franklintempletoncareers.com/" target="_blank" rel="noopener">Franklin Templeton</a></li>
+<li><a href="https://www.cohenandsteers.com/careers/" target="_blank" rel="noopener">Cohen &amp; Steers</a></li>
+<li><a href="https://www.lordabbett.com/en-us/financial-advisor/about-us/careers.html" target="_blank" rel="noopener">Lord Abbett</a></li>
+<li><a href="https://www.tcw.com/careers" target="_blank" rel="noopener">TCW</a></li>
+<li><a href="https://bbh.wd5.myworkdayjobs.com/BBH" target="_blank" rel="noopener">Brown Brothers Harriman</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.jennison.com/" target="_blank" rel="noopener">Jennison Associates</a></li>
+<li><a href="https://www.gabelli.com/" target="_blank" rel="noopener">Gabelli / GAMCO</a></li></ul></div>
+<div class="dir-col"><h3>Hedge funds</h3><ul><li><a href="https://www.citadel.com/careers/" target="_blank" rel="noopener">Citadel</a></li>
+<li><a href="https://point72.com/" target="_blank" rel="noopener">Point72</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.mlp.com/careers/" target="_blank" rel="noopener">Millennium</a></li>
+<li><a href="https://www.bamfunds.com/careers" target="_blank" rel="noopener">Balyasny</a></li>
+<li><a href="https://www.deshaw.com/careers" target="_blank" rel="noopener">D.E. Shaw</a></li>
+<li><a href="https://job-boards.greenhouse.io/schonfeld" target="_blank" rel="noopener">Schonfeld</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://job-boards.greenhouse.io/exoduspoint" target="_blank" rel="noopener">ExodusPoint</a> <span class="live" title="Roles pulled into the list above">live</span></li>
+<li><a href="https://www.mwam.com/" target="_blank" rel="noopener">Marshall Wace</a></li>
+<li><a href="https://www.jainglobal.com/" target="_blank" rel="noopener">Jain Global</a></li>
+<li><a href="https://www.tigerglobal.com/" target="_blank" rel="noopener">Tiger Global</a></li>
+<li><a href="https://www.coatue.com/" target="_blank" rel="noopener">Coatue</a></li>
+<li><a href="https://www.thirdpoint.com/" target="_blank" rel="noopener">Third Point</a></li>
+<li><a href="https://www.elliottmgmt.com/" target="_blank" rel="noopener">Elliott Management</a></li>
+<li><a href="https://www.davidsonkempner.com/" target="_blank" rel="noopener">Davidson Kempner</a></li>
+<li><a href="https://www.hudsonbaycapital.com/" target="_blank" rel="noopener">Hudson Bay Capital</a></li>
+<li><a href="https://www.verition.com/" target="_blank" rel="noopener">Verition</a></li>
+<li><a href="https://www.sculptor.com/" target="_blank" rel="noopener">Sculptor</a></li>
+<li><a href="https://www.walleyecapital.com/" target="_blank" rel="noopener">Walleye Capital</a></li>
+<li><a href="https://www.brevanhoward.com/" target="_blank" rel="noopener">Brevan Howard</a></li>
+<li><a href="https://www.kingstreet.com/" target="_blank" rel="noopener">King Street</a></li>
+<li><a href="https://www.brigadecapital.com/" target="_blank" rel="noopener">Brigade Capital</a></li>
+<li><a href="https://www.vikingglobal.com/" target="_blank" rel="noopener">Viking Global</a></li>
+<li><a href="https://www.maverickcap.com/" target="_blank" rel="noopener">Maverick Capital</a></li>
+<li><a href="https://pershingsquareholdings.com/" target="_blank" rel="noopener">Pershing Square</a></li>
+<li><a href="https://www.starboardvalue.com/" target="_blank" rel="noopener">Starboard Value</a></li>
+<li><a href="https://trianpartners.com/" target="_blank" rel="noopener">Trian Partners</a></li></ul></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Pulled from public career sites. Always confirm details on the firm's own posting. · <a href="index.html">Back to home</a></p>
+  </footer>
+
+  <script>
+    (function () {
+      var q = document.getElementById('q'), cat = document.getElementById('cat'),
+          firm = document.getElementById('firm'), nw = document.getElementById('new'),
+          count = document.getElementById('count'),
+          rows = Array.prototype.slice.call(document.querySelectorAll('#rows tr[data-firm]'));
+      function apply() {
+        var t = q.value.trim().toLowerCase(), shown = 0;
+        rows.forEach(function (r) {
+          var ok = (!t || r.textContent.toLowerCase().indexOf(t) !== -1) &&
+                   (!cat.value || r.dataset.cat === cat.value) &&
+                   (!firm.value || r.dataset.firm === firm.value) &&
+                   (!nw.checked || r.dataset.new === '1');
+          r.hidden = !ok; if (ok) shown++;
+        });
+        count.textContent = shown + ' of ' + rows.length + ' roles';
+      }
+      [q, cat, firm, nw].forEach(function (el) { el.addEventListener('input', apply); el.addEventListener('change', apply); });
+      apply();
+    })();
+  </script>
+</body>
+</html>
