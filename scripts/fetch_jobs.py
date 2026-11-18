@@ -1,7 +1,7 @@
 """Build jobs.html: NYC investment management, equity research and hedge fund roles.
 
-Pulls open roles from firms' public career-site feeds (Workday, Greenhouse and
-JPMorgan's Oracle site), keeps New York roles that match buy-side / research
+Pulls open roles from firms' public career-site feeds (Workday, Greenhouse,
+Oracle HCM and Eightfold), keeps New York roles that match buy-side / research
 keywords, and writes a static jobs.html. Firms without a public feed (Goldman
 Sachs, Citadel, D.E. Shaw, ...) are listed in a directory with links.
 
@@ -61,6 +61,13 @@ WORKDAY = [
     ("PGIM", "pru", 5, "Careers", "Asset managers"),
     ("State Street", "statestreet", 1, "Global", "Asset managers"),
     ("Brown Brothers Harriman", "bbh", 5, "BBH", "Asset managers"),
+    ("AllianceBernstein", "abglobal", 1, "alliancebernsteincareers", "Asset managers"),
+    ("Neuberger Berman", "nb", 1, "NBCareers", "Asset managers"),
+    ("Capital Group", "capgroup", 1, "capitalgroupcareers", "Asset managers"),
+    ("T. Rowe Price", "troweprice", 5, "TRowePrice", "Asset managers"),
+    ("Columbia Threadneedle", "ameriprise", 5, "Ameriprise", "Asset managers"),
+    ("First Eagle", "fei", 5, "External", "Asset managers"),
+    ("Jain Global", "jainglobal", 5, "LinkedInCareerSite", "Hedge funds"),
 ]
 WORKDAY_QUERIES = ["research", "portfolio", "investment", "equity", "analyst"]
 
@@ -70,9 +77,31 @@ GREENHOUSE = [
     ("Schonfeld", "schonfeld", "Hedge funds"),
     ("ExodusPoint", "exoduspoint", "Hedge funds"),
     ("William Blair", "williamblair", "Banks"),
+    ("Cohen & Steers", "cohensteers", "Asset managers"),
+    ("Baron Capital", "baroncapital", "Asset managers"),
+    ("Artisan Partners", "artisanpartners", "Asset managers"),
+    ("Tudor", "tudorgroup", "Hedge funds"),
+    ("Graham Capital", "grahamcapitalmanagement", "Hedge funds"),
+    ("PointState", "pointstate", "Hedge funds"),
+    ("Davidson Kempner", "1456754456yhgbhfg", "Hedge funds"),  # DK's real (odd) board token
+    ("Holocene Advisors", "holoceneadvisors", "Hedge funds"),
+    ("Marshall Wace", "marshallwace", "Hedge funds"),
+    ("Lone Pine", "lonepinecapital", "Hedge funds"),
 ]
 
 JPM_QUERIES = ["equity research", "research analyst", "asset management", "portfolio", "investment", "hedge fund"]
+
+# Other Oracle HCM career sites: firm, host, site name, site number, group
+ORACLE = [
+    ("Lazard", "icbpjb.fa.ocs.oraclecloud.com", "LazardProfessionalCareers", "CX_1", "Asset managers"),
+    ("BNY", "eofe.fa.us2.oraclecloud.com", "BNY-Careers", "CX_3001", "Asset managers"),
+]
+ORACLE_QUERIES = ["research", "portfolio", "investment", "equity"]
+
+# Eightfold career sites: firm, host, domain, group
+EIGHTFOLD = [
+    ("Millennium", "mlp.eightfold.ai", "mlp.com", "Hedge funds"),
+]
 
 # ------------------------------------------------------------ directory
 # Firms with a New York presence. "feed" firms are pulled automatically.
@@ -122,6 +151,12 @@ DIRECTORY = {
         ("Brown Brothers Harriman", "https://bbh.wd5.myworkdayjobs.com/BBH"),
         ("Jennison Associates", "https://www.jennison.com/"),
         ("Gabelli / GAMCO", "https://www.gabelli.com/"),
+        ("Capital Group", "https://capgroup.wd1.myworkdayjobs.com/capitalgroupcareers"),
+        ("T. Rowe Price", "https://troweprice.wd5.myworkdayjobs.com/TRowePrice"),
+        ("Columbia Threadneedle", "https://ameriprise.wd5.myworkdayjobs.com/Ameriprise"),
+        ("First Eagle", "https://fei.wd5.myworkdayjobs.com/en-US/External"),
+        ("Baron Capital", "https://job-boards.greenhouse.io/baroncapital"),
+        ("Artisan Partners", "https://job-boards.greenhouse.io/artisanpartners"),
     ],
     "Hedge funds": [
         ("Citadel", "https://www.citadel.com/careers/"),
@@ -150,6 +185,11 @@ DIRECTORY = {
         ("Pershing Square", "https://pershingsquareholdings.com/"),
         ("Starboard Value", "https://www.starboardvalue.com/"),
         ("Trian Partners", "https://trianpartners.com/"),
+        ("Tudor", "https://job-boards.greenhouse.io/tudorgroup"),
+        ("Graham Capital", "https://job-boards.greenhouse.io/grahamcapitalmanagement"),
+        ("PointState", "https://job-boards.greenhouse.io/pointstate"),
+        ("Holocene Advisors", "https://job-boards.greenhouse.io/holoceneadvisors"),
+        ("Lone Pine", "https://job-boards.greenhouse.io/lonepinecapital"),
     ],
 }
 
@@ -178,7 +218,7 @@ EXCLUDE = re.compile(
     r"structured products|structured equity|securitiz|asset[- ]backed|\babs\b|cmbs|rmbs|specialty finance|"
     r"alternative credit|venture|project finance|credit financing|lending|\bloans?\b|\bcib\b|"
     r"direct indexing|citigold|\buma\b|investor data|content associate|valuations|"
-    r"cubist|\brisk\b|analytics|defined contribution|"
+    r"cubist|\brisk\b|analytics|defined contribution|napier park|"
     r"intern\b.*summer.*2025",
     re.I,
 )
@@ -276,11 +316,15 @@ def fetch_greenhouse(firm, token, group):
 
 
 def fetch_jpm():
-    base = "https://jpmc.fa.oraclecloud.com/hcmRestApi/resources/latest/recruitingCEJobRequisitions"
+    return fetch_oracle("JPMorgan Chase", "jpmc.fa.oraclecloud.com", "CX_1001", "CX_1001", "Banks", JPM_QUERIES)
+
+
+def fetch_oracle(firm, host, site, site_number, group, queries=None):
+    base = f"https://{host}/hcmRestApi/resources/latest/recruitingCEJobRequisitions"
     seen, out = set(), []
-    for q in JPM_QUERIES:
+    for q in queries or ORACLE_QUERIES:
         for offset in range(0, 150, 25):
-            finder = f'findReqs;siteNumber=CX_1001,keyword="{q}",limit=25,offset={offset},sortBy=POSTING_DATES_DESC'
+            finder = f'findReqs;siteNumber={site_number},keyword="{q}",limit=25,offset={offset},sortBy=POSTING_DATES_DESC'
             url = base + "?" + urllib.parse.urlencode({"onlyData": "true", "expand": "requisitionList.secondaryLocations", "finder": finder})
             items = http_json(url).get("items") or [{}]
             reqs = items[0].get("requisitionList", [])
@@ -294,12 +338,38 @@ def fetch_jpm():
                 cat = categorize(title)
                 if not cat or not NYC.search(loc):
                     continue
-                out.append(dict(title=title, firm="JPMorgan Chase", group="Banks", category=cat, location=loc,
+                out.append(dict(title=title, firm=firm, group=group, category=cat, location=loc,
                                 posted=j.get("PostedDate"),
-                                url=f"https://jpmc.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1001/job/{jid}"))
+                                url=f"https://{host}/hcmUI/CandidateExperience/en/sites/{site}/job/{jid}"))
             if len(reqs) < 25:
                 break
             time.sleep(0.3)
+    return out
+
+
+def fetch_eightfold(firm, host, domain, group):
+    seen, out, start = set(), [], 0
+    while start < 1000:
+        q = urllib.parse.urlencode({"domain": domain, "start": start, "num": 50, "location": "New York"})
+        d = http_json(f"https://{host}/api/apply/v2/jobs?{q}")
+        posts = d.get("positions", [])
+        for p in posts:
+            if p.get("id") in seen:
+                continue
+            seen.add(p.get("id"))
+            title = p.get("name", "")
+            loc = p.get("location") or "; ".join(p.get("locations") or [])
+            cat = categorize(title)
+            if not cat or not NYC.search(loc):
+                continue
+            ts = p.get("t_create")
+            out.append(dict(title=title, firm=firm, group=group, category=cat, location=loc,
+                            posted=dt.datetime.fromtimestamp(ts, dt.timezone.utc).date().isoformat() if ts else None,
+                            url=p.get("canonicalPositionUrl") or f"https://{host}/careers/job/{p.get('id')}"))
+        start += len(posts)
+        if not posts or start >= d.get("count", 0):
+            break
+        time.sleep(0.3)
     return out
 
 
@@ -311,6 +381,10 @@ def collect():
         for f, t, g in GREENHOUSE:
             tasks[ex.submit(fetch_greenhouse, f, t, g)] = f
         tasks[ex.submit(fetch_jpm)] = "JPMorgan Chase"
+        for f, h, s, n, g in ORACLE:
+            tasks[ex.submit(fetch_oracle, f, h, s, n, g)] = f
+        for f, h, dom, g in EIGHTFOLD:
+            tasks[ex.submit(fetch_eightfold, f, h, dom, g)] = f
         jobs, ok, failed = [], [], []
         for fut in cf.as_completed(tasks):
             firm = tasks[fut]
@@ -496,6 +570,7 @@ TEMPLATE = """<!DOCTYPE html>
         <li><a href="research.html">Research</a></li>
         <li><a href="dashboard.html">Dashboard</a></li>
         <li><a href="movers.html">Movers</a></li>
+        <li><a href="rollins.html">Rollins</a></li>
         <li><a class="active" href="jobs.html" aria-current="page">Jobs</a></li>
         <li><a href="index.html#contact">Contact</a></li>
         <li><a class="nav-cta" href="Lee_Bennett_Resume_2026.pdf" target="_blank" rel="noopener">Resume ↓</a></li>
