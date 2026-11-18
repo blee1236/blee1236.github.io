@@ -1,0 +1,46 @@
+# Rebuilds portfolio.html (beta-adjusted track record) from live prices.
+# Holdings live ONLY in the HOLDINGS_CSV repository secret (ticker,date,cost per lot);
+# the page and repo only ever get percentages. Only portfolio.html is committed.
+name: Update track record
+
+on:
+  schedule:
+    # Every 30 min, Mon–Fri, 13:00–21:30 UTC (covers 9:30am–4pm New York in both EST and EDT)
+    - cron: "*/30 13-21 * * 1-5"
+  workflow_dispatch: {} # run by hand from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-portfolio
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Rebuild portfolio.html
+        env:
+          HOLDINGS_CSV: ${{ secrets.HOLDINGS_CSV }}
+        run: python scripts/update_portfolio.py
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- portfolio.html; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "portfolio-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add portfolio.html
+          git commit -m "Update track record ($(date -u +%Y-%m-%dT%H:%MZ))"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git push
