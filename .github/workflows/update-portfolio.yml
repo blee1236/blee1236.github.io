@@ -34,13 +34,13 @@ jobs:
 
       - name: Commit if changed
         run: |
-          if git diff --quiet -- portfolio.html; then
+          git add portfolio.html
+          if git diff --cached --quiet -- portfolio.html; then
             echo "No changes."
             exit 0
           fi
           git config user.name "portfolio-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add portfolio.html
           git commit -m "Update track record ($(date -u +%Y-%m-%dT%H:%MZ))"
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
           git push
